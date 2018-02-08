@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\logic">
+      <UniqueIdentifier>{e1b65161-8921-4a08-9426-3294212dd83b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\controller">
+      <UniqueIdentifier>{9de95ca6-160d-4c00-b241-f2a9ed9c8fbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\logic">
+      <UniqueIdentifier>{178b89fc-f1f2-428c-af69-58a89d2d4c15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\controller">
+      <UniqueIdentifier>{3eea95b9-191d-4a2c-982a-73fff0fb02b4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\logic\game.h">
+      <Filter>头文件\logic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\logic\map.h">
+      <Filter>头文件\logic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\logic\prop.h">
+      <Filter>头文件\logic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\logic\car.h">
+      <Filter>头文件\logic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\logic\common.h">
+      <Filter>头文件\logic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\controller\player.h">
+      <Filter>头文件\controller</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
