@@ -50,5 +50,17 @@
     <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\logic\car.cpp">
+      <Filter>源文件\logic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logic\game.cpp">
+      <Filter>源文件\logic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logic\map.cpp">
+      <Filter>源文件\logic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logic\prop.cpp">
+      <Filter>源文件\logic</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
