@@ -20,6 +20,7 @@ const int MAG_MAX = 12;
 const int MAG_CHANGETIME = 2 * FREQ;
 const double VIEW_DEG = 45;
 
+const double SPD_BASE = 1.0;
 enum SPD_STATUS { SPD_LOW, SPD_NORM , SPD_HIGH, SPD_STATUS_NUM };
 const double SPD_VAL[SPD_STATUS_NUM] = { 0.5, 1.0, 1.5 };
 
@@ -49,11 +50,11 @@ class Point {
 public:
     T x, y;
 
-	Point() :x(0), y(0) {}
-	Point(T _x, T _y) :x(_x), y(_y) {}
+    Point() :x(0), y(0) {}
+    Point(T _x, T _y) :x(_x), y(_y) {}
 
-	double getDistance(Point _p) {
-		return sqrt((x - _p.x)*(x - _p.x) + (y - _p.y)*(y - _p.y));
-	}
+    double getDistance(Point _p) {
+        return sqrt((x - _p.x)*(x - _p.x) + (y - _p.y)*(y - _p.y));
+    }
 
 };
