@@ -1,7 +1,9 @@
 //公用库
 #pragma once
 
-#include <cmath>
+#include<cmath>
+#include<vector>
+using namespace std;
 
 // 公用常数
 const int FREQ = 30;
@@ -11,7 +13,7 @@ const int ROUND_MINUTE = 60 * FREQ;
 const int MAP_WIDTH = 400;
 const int MAP_HEIGHT = 300;
 const double ATTACK_OOR = 5 / FREQ;  //出界伤害
-
+const int RADIUS_OBSTACLE = 5;
 
 //小车参数
 const double HP_MAX = 100.0;
@@ -61,3 +63,22 @@ public:
     }
 
 };
+
+//道具位置
+const int SPEED_BUFF_X = 0.5*MAP_WIDTH;
+const int SPEED_BUFF_Y = 0.25*MAP_HEIGHT;
+
+const int DEF_BUFF_X = 0.5*MAP_WIDTH;
+const int DEF_BUFF_Y = 0.75*MAP_HEIGHT;
+
+const int HP_PAK1_X = 20;
+const int HP_PAK1_Y = 20;
+
+const int MP_PAK1_X = 20;
+const int MP_PAK1_Y = MAP_HEIGHT - 20;
+
+const int HP_PAK2_X = MAP_WIDTH - 20;
+const int HP_PAK2_Y = MAP_HEIGHT- 20;
+
+const int MP_PAK2_X = MAP_WIDTH - 20;
+const int MP_PAK2_Y = 20;

@@ -147,9 +147,13 @@
     <ClInclude Include="include\logic\common.h" />
     <ClInclude Include="include\logic\game.h" />
     <ClInclude Include="include\logic\map.h" />
-    <ClInclude Include="include\logic\prop.hpp" />
+    <ClInclude Include="include\logic\prop.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\logic\car.cpp" />
+    <ClCompile Include="src\logic\game.cpp" />
+    <ClCompile Include="src\logic\map.cpp" />
+    <ClCompile Include="src\logic\prop.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

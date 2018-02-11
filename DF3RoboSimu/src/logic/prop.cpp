@@ -2,11 +2,13 @@
 #include "..\..\include\logic\prop.h"
 
 
-Prop::Prop(Prop_type t, double _x, double _y)
+Prop::Prop(Prop_type t, int _x, int _y,int _owner)
 {
     pos.x = _x;
     pos.y = _y;
     tp = t;
+    owner = _owner;
+
     switch (tp)
     {
     case SPD_BUFF:
@@ -26,9 +28,17 @@ Prop::Prop(Prop_type t, double _x, double _y)
     }
 }
 
+bool Prop::if_gotcha(car c)
+{
+    Point <double> p = c.getCoor();
+    if (owner == 0 && owner == c.getSide())
+        return (p.getDistance(pos) < RADIUS_PROP);
+    else
+        return false;
+}
+
 void Prop::betaken(car c)
 {
-
     flag_available = false;
     CD_count = 0;
     //对车的处理
@@ -53,10 +63,9 @@ void Prop::betaken(car c)
 
 void Prop::round_operation(car c1, car c2)
 {
-
     if (is_available) {
-        bool got_by_car1 = if_gotcha(c1.getCoor());//todo: point类型问题
-        bool got_by_car2 = if_gotcha(c2.getCoor());
+        bool got_by_car1 = if_gotcha(c1);
+        bool got_by_car2 = if_gotcha(c2);
         if (got_by_car1&&got_by_car2) {
             if (got_by_car1)
                 betaken(c1);
@@ -69,5 +78,4 @@ void Prop::round_operation(car c1, car c2)
         if (CD_count > CD)
             regenerate();
     }
-}
 }

@@ -5,8 +5,8 @@
 class car {
 public:
     car() {}
-    car(Point<int> _coor, double _tank_angle) :tank_angle(_tank_angle) { coor.x = (double)_coor.x; coor.y = (double)_coor.y; }
-    Point<int> getCoor() { return Point<int>((int)coor.x, (int)coor.y); }
+    car(Point<int> _coor, double _tank_angle,int _side) :tank_angle(_tank_angle) ,side(_side){ coor.x = (double)_coor.x; coor.y = (double)_coor.y; }
+    Point<double> getCoor() { return Point<double>((int)coor.x, (int)coor.y); }
     double getHP() { return hp; }
     int getMP() { return mp; }
     int getMAG() { return mag; }
@@ -24,6 +24,7 @@ public:
     int attack(ATK_NUM_MAG num);
     void getView();
 
+    int getSide() { return side; }
 
 protected:
     double attacked(ATK_NUM_MAG atk_num_mag, ATK_POS atk_pos);
@@ -33,6 +34,7 @@ protected:
 private:
     double hp = 100.0, lspd = 0.0, rspd = 0.0, tank_angle = 0.0, attack_angle = 0.0;
     int mp = 100, mag = 12;
+    int side;
     Point<double> coor = Point<double>(0.0, 0.0);
     SPD_STATUS spd_status = SPD_NORM;
     DEF_STATUS def_status = DEF_NORM;
