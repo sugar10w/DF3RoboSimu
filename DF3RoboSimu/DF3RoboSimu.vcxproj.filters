@@ -33,9 +33,6 @@
     <ClInclude Include="include\logic\map.h">
       <Filter>头文件\logic</Filter>
     </ClInclude>
-    <ClInclude Include="include\logic\prop.h">
-      <Filter>头文件\logic</Filter>
-    </ClInclude>
     <ClInclude Include="include\logic\car.h">
       <Filter>头文件\logic</Filter>
     </ClInclude>
@@ -44,6 +41,9 @@
     </ClInclude>
     <ClInclude Include="include\controller\player.h">
       <Filter>头文件\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\logic\prop.hpp">
+      <Filter>头文件\logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

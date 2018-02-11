@@ -147,7 +147,7 @@
     <ClInclude Include="include\logic\common.h" />
     <ClInclude Include="include\logic\game.h" />
     <ClInclude Include="include\logic\map.h" />
-    <ClInclude Include="include\logic\prop.h" />
+    <ClInclude Include="include\logic\prop.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
