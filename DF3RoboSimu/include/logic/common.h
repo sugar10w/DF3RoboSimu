@@ -22,11 +22,11 @@ const double VIEW_DEG = 45;
 const double ROTATE_SPD = 30.0 / FREQ;
 
 const double SPD_BASE = 1.0;
-enum SPD_STATUS { SPD_LOW, SPD_NORM , SPD_HIGH, SPD_STATUS_NUM_CD };
-const double SPD_VAL[SPD_STATUS_NUM_CD] = { 0.5, 1.0, 1.5 };
+enum SPD_STATUS { SPD_LOW, SPD_NORM , SPD_HIGH, SPD_STATUS_NUM };
+const double SPD_VAL[SPD_STATUS_NUM] = { 0.5, 1.0, 1.5 };
 
-enum DEF_STATUS { DEF_ARM, DEF_NORM, DEF_STATUS_NUM_CD };
-const double DEF_VAL[DEF_STATUS_NUM_CD] = { 0.5, 1.0 };
+enum DEF_STATUS { DEF_ARM, DEF_NORM, DEF_STATUS_NUM };
+const double DEF_VAL[DEF_STATUS_NUM] = { 0.5, 1.0 };
 
 enum ATK_STATUS { ATK_NORM, ATK_CD, ATK_MAG };
 enum ATK_NUM_MAG { ATK_1MAG, ATK_2MAG, ATK_3MAG, ATK_NUM_MAG_NUM };

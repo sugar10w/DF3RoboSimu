@@ -2,6 +2,7 @@
 #pragma once
 #include "common.h"
 #include "prop.h"
+#include "game.h"
 #include "map.h"
 #include <vector>
 
@@ -25,12 +26,15 @@ public:
     SPD_STATUS getSpdStatus() { return spd_status; }
     DEF_STATUS getDefStatus() { return def_status; }
     ATK_STATUS getAtkStatus() { return atk_status; }
-    SLOWDOWN_STATUS getSlowDownStatus() { return sd_status; }
+    SLOWDOWN_STATUS getSlowDownStatus() { return slowdown_status; }
+
+    /// TODO: change to real function.
+    int getTime() { return game ? game->getTime() : -1; }
 
     /// 判断是否在界外
     ///    
     ///     @return    是否在界外
-    bool isOOR() { return (coor.x<0 || coor.x>MAP_WIDTH - 1 || coor.y<0 || coor.y >MAP_HEIGHT - 1) ? true : false; }
+    bool isOOR();
 
     /// 设置左轮速度
     ///    
@@ -101,25 +105,26 @@ public:
 protected:
     /// 小车构造函数
     ///    
-    ///     设定初始位置、车头方向、所属队伍，该Car类只能由Map类创造实例。
+    ///     设定初始位置、车头方向、所属队伍，该Car类只能由Game类创造实例。
     ///     @param _map 小车所处地图指针
     ///     @param _coor 初始坐标
     ///     @param _car_angle 初始车头朝向
     ///     @param _team 所属队伍
-    Car(Map* _map, Point<int> _coor = Point<int>(0, 0), double _car_angle = 0.0, int _team = 0)
-        :car_angle(_car_angle), team(_team), map(_map) { coor.x = (double)_coor.x; coor.y = (double)_coor.y; }
+    Car(Game* _game, Map* _map, Point<int> _coor = Point<int>(0, 0), double _car_angle = 0.0, int _team = 0)
+        :car_angle(_car_angle), team(_team), map(_map) 
+    { coor.x = (double)_coor.x; coor.y = (double)_coor.y; }
 
     /// 受到延缓射线攻击
     ///    
     ///     若原状态为常速则变为减速，若原状态为加速则变为常速。为防止小车运动方向突变，两个轮子速度整体减半，后续选手可自行调整。
-    void slowDown();
+    void slowedDown();
 
     /// 设置小车位置
     ///    
     ///     由Map设定坐标和车头方向。
     ///     @param _coor 小车坐标
     ///     @param _tank_angle 车头方向
-    void setPos(Point<double> _coor, double _car_angle) { coor = _coor; if (_car_angle >= 0 && _car_angle < 360) car_angle = _car_angle; }
+    void setPos(Point<double> _coor, double _car_angle);
 
     /// 设置小车技能值
     ///    
@@ -132,6 +137,11 @@ protected:
     ///     设置小车生命值
     ///     @param _hp 新生命值
     void setHP(int _hp) { if (_hp>0 && _hp<=HP_MAX) hp = _hp; }
+
+    /// 小车状态更新
+    ///    
+    ///     更新小车状态，判断下一帧位置
+    void frameRoutine();
 
 private:
     double hp = HP_MAX,  /// 血量，范围[0, HP_MAX]
@@ -146,11 +156,13 @@ private:
         atk_cd_time = 0,  /// 攻击释放时间
         change_mag_time = 0,  /// 换弹夹时间
         spdup_cd_time = 0,  /// 加速释放时间
-        slowdown_cd_time = 0;  /// 延缓射线释放时间
+        slowdown_cd_time = 0,  /// 延缓射线释放时间
+        sloweddown_time = 0;  /// 被减速时间
     Map* map = NULL;  /// 所属地图
+    Game* game = NULL;  ///所属游戏控制类
     Point<double> coor = Point<double>(0.0, 0.0);  /// 坐标，内部计算均采用double类型，对外呈现均为int整型
     SPD_STATUS spd_status = SPD_NORM;  /// 速度状态
     DEF_STATUS def_status = DEF_NORM;  /// 防御状态
     ATK_STATUS atk_status = ATK_NORM;  /// 攻击状态
-    SLOWDOWN_STATUS sd_status = SLOWDOWN_NORM;  ///延缓射线状态
+    SLOWDOWN_STATUS slowdown_status = SLOWDOWN_NORM;  ///延缓射线状态
 };
