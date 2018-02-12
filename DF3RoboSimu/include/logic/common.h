@@ -19,19 +19,23 @@ const int MP_GAIN = 2;
 const int MAG_MAX = 12;
 const int MAG_CHANGETIME = 2 * FREQ;
 const double VIEW_DEG = 45;
+const double ROTATE_SPD = 30.0 / FREQ;
 
 const double SPD_BASE = 1.0;
-enum SPD_STATUS { SPD_LOW, SPD_NORM , SPD_HIGH, SPD_STATUS_NUM };
-const double SPD_VAL[SPD_STATUS_NUM] = { 0.5, 1.0, 1.5 };
+enum SPD_STATUS { SPD_LOW, SPD_NORM , SPD_HIGH, SPD_STATUS_NUM_CD };
+const double SPD_VAL[SPD_STATUS_NUM_CD] = { 0.5, 1.0, 1.5 };
 
-enum DEF_STATUS { DEF_ARM, DEF_NORM, DEF_STATUS_NUM };
-const double DEF_VAL[DEF_STATUS_NUM] = { 0.5, 1.0 };
+enum DEF_STATUS { DEF_ARM, DEF_NORM, DEF_STATUS_NUM_CD };
+const double DEF_VAL[DEF_STATUS_NUM_CD] = { 0.5, 1.0 };
 
 enum ATK_STATUS { ATK_NORM, ATK_CD, ATK_MAG };
 enum ATK_NUM_MAG { ATK_1MAG, ATK_2MAG, ATK_3MAG, ATK_NUM_MAG_NUM };
 enum ATK_POS { ATK_FRONT, ATK_SIDE, ATK_BACK, ATK_POS_NUM};
 
+enum SLOWDOWN_STATUS { SLOWDOWN_NORM, SLOWDOWN_CD };
+
 //道具参数
+enum Prop_type { SPD_BUFF, DEF_BUFF, HP_PAK, MP_PAK };
 const double RADIUS_PROP = 20;
 const int PROP_START_TIME = 5 * FREQ;
 const int BUFF_CD_TIME = 20 * FREQ;
@@ -58,3 +62,22 @@ public:
     }
 
 };
+
+typedef struct
+{
+    Point<int> coor;
+    double tank_angle, attack_angle;
+    int team;
+} car_info;
+
+typedef struct
+{
+    Point<int> coor;
+    int radius;
+} obs_info;
+
+typedef struct
+{
+    Prop_type tp;
+    Point<int> pos;
+} prop_info;
