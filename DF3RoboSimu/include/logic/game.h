@@ -9,4 +9,17 @@
 //      (2)调用用户函数
 //      (3)移动到下一位置
 //      (4)返回小车回放文件结构体
-//3.判断是否结束
+//3.超时减伤
+//4.判断是否结束
+
+#include "car.h"
+
+class Game {
+public:
+    Game();
+    int getTime() { return frame; }
+
+private:
+    int frame;
+    Car *car1, *car2;
+};

@@ -1,15 +1,19 @@
 // 小车
 #pragma once
 #include "common.h"
-#include "prop.h"
 #include "game.h"
 #include "map.h"
+#include "infoFormat.h"
 #include <vector>
+
+class Car;
+extern void playerFunc(Car* car, Map* map, Game* game);
 
 ///    \brief  小车仿真类  
 ///  
 ///    每个小车的位置由坐标coor、前进方向car_angle、相对于前进方向的射击角度attack_angle确定。
 ///    包含血量hp、技能mp、弹夹数mag，通过左右轮速度lspd、rspd控制小车运动，通过旋转射击角度进行瞄准。
+///    useBuff控制每帧只能释放一个主动技能(攻击、换弹夹、加速、延缓射线、护罩)
 ///
 class Car {
 public:
@@ -23,10 +27,14 @@ public:
     double getAttackAngle() { return attack_angle; }
     double getLeftSpeed() { return lspd; }
     double getRightSpeed() { return rspd; }
-    SPD_STATUS getSpdStatus() { return spd_status; }
+    SPD_STATUS getSpdCdStatus() { return spd_status; }
     DEF_STATUS getDefStatus() { return def_status; }
-    ATK_STATUS getAtkStatus() { return atk_status; }
-    SLOWDOWN_STATUS getSlowDownStatus() { return slowdown_status; }
+    BUFF_CD_STATUS getAtkCdStatus() { return atk_cd_status; }
+    BUFF_CD_STATUS getSpeedUpCdStatus() { return spdup_cd_status; }
+    BUFF_CD_STATUS getDefCdStatus() { return def_cd_status; }
+    BUFF_CD_STATUS getSlowDownCdStatus() { return slowdown_cd_status; }
+    BUFF_CD_STATUS getChangeMagCdStatus() { return changemag_cd_status; }
+    int getSlowedDownTime() { return sloweddown_time; }
 
     /// TODO: change to real function.
     int getTime() { return game ? game->getTime() : -1; }
@@ -66,7 +74,8 @@ public:
     /// 换弹夹
     ///    
     ///     更换弹夹，进入ATK_MAG状态，无法进行攻击，耗时MAG_CHANGETIME，之后进入ATK_NORM状态
-    void changeMag();
+    ///     @return    是否成功释放技能
+    bool changeMag();
 
     /// 发射延缓射线
     ///    
@@ -114,6 +123,11 @@ protected:
         :car_angle(_car_angle), team(_team), map(_map) 
     { coor.x = (double)_coor.x; coor.y = (double)_coor.y; }
 
+    /// 导出回放文件结构体
+    ///    
+    ///     填充小车的当前帧信息
+    PlayerInfo getPlayerInfo();
+
     /// 受到延缓射线攻击
     ///    
     ///     若原状态为常速则变为减速，若原状态为加速则变为常速。为防止小车运动方向突变，两个轮子速度整体减半，后续选手可自行调整。
@@ -130,20 +144,25 @@ protected:
     ///    
     ///     设置小车技能值
     ///     @param _mp 新技能值
-    void setMP(int _mp) { if (_mp>0 && _mp<= MP_MAX) mp = _mp; }
+    void setMP(int _mp);
 
     /// 设置小车生命值
     ///    
     ///     设置小车生命值
     ///     @param _hp 新生命值
-    void setHP(int _hp) { if (_hp>0 && _hp<=HP_MAX) hp = _hp; }
+    void setHP(int _hp);
 
-    /// 小车状态更新
+    /// 每帧刷新状态
     ///    
-    ///     更新小车状态，判断下一帧位置
-    void frameRoutine();
+    ///     更新小车状态，调用选手函数，判断下一帧位置，返回回放文件结构体
+    PlayerInfo frameRoutine();
 
 private:
+    /// 内部状态更新
+    ///    
+    ///     更新小车状态
+    void statusUpdate();
+
     double hp = HP_MAX,  /// 血量，范围[0, HP_MAX]
         lspd = 0.0,   /// 左轮速度，范围[-spd_status*SPD_BASE, spd_status*SPD_BASE]
         rspd = 0.0,   /// 右轮速度，范围[-spd_status*SPD_BASE, spd_status*SPD_BASE]
@@ -154,15 +173,17 @@ private:
         team = 0,  /// 队伍id
         def_cd_time = 0,  /// 能量护罩释放时间
         atk_cd_time = 0,  /// 攻击释放时间
-        change_mag_time = 0,  /// 换弹夹时间
+        changemag_cd_time = 0,  /// 换弹夹时间
         spdup_cd_time = 0,  /// 加速释放时间
         slowdown_cd_time = 0,  /// 延缓射线释放时间
-        sloweddown_time = 0;  /// 被减速时间
+        sloweddown_time = 0;  /// 开始被减速时间
+    bool useBuff = false, useRotate = false;  /// 保证每帧主动技能和攻击转向只能被调用一次
+    PIInstruction buffRecord = PIInstruction_NULL;  /// 记录该帧内所使用buff
     Map* map = NULL;  /// 所属地图
     Game* game = NULL;  ///所属游戏控制类
     Point<double> coor = Point<double>(0.0, 0.0);  /// 坐标，内部计算均采用double类型，对外呈现均为int整型
     SPD_STATUS spd_status = SPD_NORM;  /// 速度状态
     DEF_STATUS def_status = DEF_NORM;  /// 防御状态
-    ATK_STATUS atk_status = ATK_NORM;  /// 攻击状态
-    SLOWDOWN_STATUS slowdown_status = SLOWDOWN_NORM;  ///延缓射线状态
+    BUFF_CD_STATUS slowdown_cd_status = BUFF_NORM, spdup_cd_status = BUFF_NORM, 
+        atk_cd_status = BUFF_NORM, def_cd_status = BUFF_NORM, changemag_cd_status = BUFF_NORM;  /// 各技能冷却状态
 };

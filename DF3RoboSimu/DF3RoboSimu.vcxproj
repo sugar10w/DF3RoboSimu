@@ -148,6 +148,7 @@
     <ClInclude Include="include\logic\game.h" />
     <ClInclude Include="include\logic\map.h" />
     <ClInclude Include="include\logic\prop.h" />
+    <ClInclude Include="infoFormat.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\logic\car.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="src\logic\map.cpp" />
     <ClCompile Include="src\logic\prop.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

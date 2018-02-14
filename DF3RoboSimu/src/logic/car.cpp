@@ -51,30 +51,50 @@ double Car::setRightSpeed(double _rspd)
 
 double Car::rotateAttack(double _angle)
 {
-    if (_angle < -ROTATE_SPD)
-        attack_angle -= ROTATE_SPD;
-    else if (_angle > ROTATE_SPD)
-        attack_angle += ROTATE_SPD;
-    else
-        attack_angle += _angle;
+    if (!useRotate)
+    {
+        if (_angle < -ROTATE_SPD)
+            attack_angle -= ROTATE_SPD;
+        else if (_angle > ROTATE_SPD)
+            attack_angle += ROTATE_SPD;
+        else
+            attack_angle += _angle;
 
+        attack_angle = fmod(attack_angle, 360.0);
+        useRotate = true;
+    }
+    
     return attack_angle;
 }
 
-void Car::changeMag()
+bool Car::changeMag()
 {
-    atk_status = ATK_MAG;
-    change_mag_time = getTime();
+    if (changemag_cd_status == BUFF_NORM && !useBuff)
+    {
+        mag = 0;
+        changemag_cd_status = BUFF_CD;
+        changemag_cd_time = getTime();
+        useBuff = true;
+        buffRecord = PIInstruction_changemag;
+        return true;
+    }
+    else {
+        return false;
+    }
+    
 }
 
 bool Car::emitSlowdown()
 {
-    if (slowdown_status == SLOWDOWN_NORM && mp >= BUFF_MP[BUFF_SLOWDOWN])
+    if (slowdown_cd_status == BUFF_NORM && atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM
+        && mp >= BUFF_MP[BUFF_SLOWDOWN] && !useBuff)
     {
         map->slowdown(coor, car_angle);
         mp -= BUFF_MP[BUFF_SLOWDOWN];
-        slowdown_status = SLOWDOWN_CD;
-        slowdown_cd_time = getTime();
+        atk_cd_status = slowdown_cd_status = BUFF_CD;
+        atk_cd_time = slowdown_cd_time = getTime();        
+        useBuff = true;
+        buffRecord = PIInstruction_slowdown;
         return true;
     }
     else {
@@ -84,14 +104,180 @@ bool Car::emitSlowdown()
 
 bool Car::speedUp()
 {
-    if ((spd_status == SPD_LOW || spd_status == SPD_NORM) && mp >= BUFF_MP[BUFF_SPEEDUP])
+    if ((spd_status == SPD_LOW || spd_status == SPD_NORM) && mp >= BUFF_MP[BUFF_SPEEDUP] && !useBuff)
     {
         mp -= BUFF_MP[BUFF_SPEEDUP];
         spd_status = SPD_HIGH;
         spdup_cd_time = getTime();
+        useBuff = true;
+        buffRecord = PIInstruction_speedup;
         return true;
     }
     else {
         return false;
     }
+}
+
+bool Car::protect()
+{
+    if (def_status == DEF_NORM  && mp >= BUFF_MP[BUFF_DEFEND] && !useBuff)
+    {
+        mp -= BUFF_MP[BUFF_DEFEND];
+        def_status = DEF_ARM;
+        def_cd_time = getTime();
+        useBuff = true;
+        buffRecord = PIInstruction_defend;
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool Car::attack(ATK_NUM_MAG num)
+{
+    if (atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM && mag >= num && !useBuff)
+    {
+        map->attack(coor, fmod(car_angle + attack_angle, 360.0), num);
+        mag -= num;
+        atk_cd_status = BUFF_CD;
+        atk_cd_time = getTime();
+        useBuff = true;
+        buffRecord = PIInstruction_attack;
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+void Car::getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props)
+{
+    map->getView(this, cars, obs, props);
+}
+
+PlayerInfo Car::frameRoutine()
+{
+    // 1.更新小车状态
+    statusUpdate();
+
+    // 2.调用选手函数
+    playerFunc(this, map, game);
+
+    // 3.移动到下一位置
+    map->setNextPos(this);
+
+    // 4.返回小车回放文件结构体
+    return getPlayerInfo();
+}
+
+void Car::statusUpdate()
+{
+    int cur_time = game->getTime();
+    useBuff = false;
+    useRotate = false;
+    buffRecord = PIInstruction_NULL;
+
+    // defend cd status
+    if (cur_time - def_cd_time == BUFF_CD_TIME[BUFF_DEFEND]) {
+        def_cd_status = BUFF_NORM;
+    }
+    // defend status
+    if (cur_time - def_cd_time == BUFF_VALID_TIME) {
+        def_status = DEF_NORM;
+    }
+
+    // speed up cd status
+    if (cur_time - spdup_cd_time == BUFF_CD_TIME[BUFF_SPEEDUP]) {
+        spdup_cd_status = BUFF_NORM;
+    }
+    // speed up status, if not slowed after speedup, then back to SPD_NORM
+    if (cur_time - spdup_cd_time == BUFF_VALID_TIME && spd_status == SPD_HIGH) {
+        spd_status = SPD_NORM;
+    }
+    // slowed down status, if not speeded up after slowed down, then back to SPD_NORM
+    if (cur_time - sloweddown_time == BUFF_VALID_TIME && spd_status == SPD_LOW) {
+        spd_status = SPD_NORM;
+    }
+
+    // slow down cd status
+    if (cur_time - slowdown_cd_time == BUFF_CD_TIME[BUFF_SLOWDOWN]) {
+        spdup_cd_status = BUFF_NORM;
+    }
+
+    // attack cd status
+    if (cur_time - atk_cd_time == ATK_CD_TIME) {
+        atk_cd_status = BUFF_NORM;
+    }
+
+    // change magazine cd status
+    if (cur_time - changemag_cd_time == MAG_CHANGETIME) {
+        mag = MAG_MAX;
+        changemag_cd_status = BUFF_NORM;
+    }
+}
+
+void Car::setMP(int _mp)
+{
+    if (_mp < 0)
+        mp = 0;
+    else if (_mp > MP_MAX)
+        mp = MP_MAX;
+    else
+        mp = _mp;
+}
+
+void Car::setHP(int _hp)
+{
+    if (_hp < 0)
+        hp = 0;
+    else if (_hp > HP_MAX)
+        hp = HP_MAX;
+    else
+        hp = _hp;
+}
+
+PlayerInfo Car::getPlayerInfo()
+{
+    int curtime = game->getTime();
+    PlayerInfo info;
+    info.HP = hp;
+    info.MP = mp;
+    info.MAG = mag;
+    info.x = (float)coor.x;
+    info.y = (float)coor.y;
+    info.angle = (float)car_angle;
+    info.sightAngle = (float)attack_angle;
+    info.speedState = (int)spd_status + 1;
+    info.defenceState = (int)def_status + 1;
+    info.instruction = buffRecord;
+
+    if (changemag_cd_status == BUFF_CD)
+        info.attackState = PIAttackState_changemag;
+    else if (atk_cd_status == BUFF_CD)
+        info.attackState = PIAttackState_CD;
+    else
+        info.attackState = PIAttackState_attack;
+
+    if (slowdown_cd_status == BUFF_CD)
+        info.instructionCD[PIInstruction_slowdown - 1] = BUFF_CD_TIME[BUFF_SLOWDOWN] - (curtime - slowdown_cd_time);
+    else
+        info.instructionCD[PIInstruction_slowdown - 1] = 0;
+
+    if (atk_cd_status == BUFF_CD)
+        info.instructionCD[PIInstruction_attack - 1] = ATK_CD_TIME - (curtime - atk_cd_time);
+    else
+        info.instructionCD[PIInstruction_attack - 1] = 0;
+
+    if (spdup_cd_status == BUFF_CD)
+        info.instructionCD[PIInstruction_speedup - 1] = BUFF_CD_TIME[BUFF_SPEEDUP] - (curtime - spdup_cd_time);
+    else
+        info.instructionCD[PIInstruction_speedup - 1] = 0;
+
+    if (def_cd_status == BUFF_CD)
+        info.instructionCD[PIInstruction_defend - 1] = BUFF_CD_TIME[BUFF_DEFEND] - (curtime - def_cd_time);
+    else
+        info.instructionCD[PIInstruction_defend - 1] = 0;
+
+    return info;
 }

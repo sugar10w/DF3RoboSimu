@@ -5,7 +5,7 @@
 //2.调用该car->slowedDown()
 
 
-//需要void attack(Point<double> coor, double attack_angle)
+//需要void attack(Point<double> coor, double attack_angle, ATK_NUM_MAG mag_num)
 //1.判断被攻击小车
 //2.调用该car->setHP()
 

@@ -45,6 +45,9 @@
     <ClInclude Include="include\controller\player.h">
       <Filter>头文件\controller</Filter>
     </ClInclude>
+    <ClInclude Include="infoFormat.h">
+      <Filter>头文件\logic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="src\logic\prop.cpp">
       <Filter>源文件\logic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\player.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
