@@ -3,7 +3,7 @@
 #include "common.h"
 #include "game.h"
 #include "map.h"
-#include "infoFormat.h"
+#include "log_Format.h"
 #include <vector>
 
 class Car;
@@ -18,26 +18,26 @@ extern void playerFunc(Car* car, Map* map, Game* game);
 class Car {
 public:
     friend class Map;
-    Point<int> getCoor() { return Point<int>((int)coor.x, (int)coor.y); }
-    double getHP() { return hp; }
-    int getMP() { return mp; }
-    int getMAG() { return mag; }
-    int getTeam() { return team; }
-    double getCarAngle() { return car_angle; }
-    double getAttackAngle() { return attack_angle; }
-    double getLeftSpeed() { return lspd; }
-    double getRightSpeed() { return rspd; }
-    SPD_STATUS getSpdCdStatus() { return spd_status; }
-    DEF_STATUS getDefStatus() { return def_status; }
-    BUFF_CD_STATUS getAtkCdStatus() { return atk_cd_status; }
-    BUFF_CD_STATUS getSpeedUpCdStatus() { return spdup_cd_status; }
-    BUFF_CD_STATUS getDefCdStatus() { return def_cd_status; }
-    BUFF_CD_STATUS getSlowDownCdStatus() { return slowdown_cd_status; }
-    BUFF_CD_STATUS getChangeMagCdStatus() { return changemag_cd_status; }
-    int getSlowedDownTime() { return sloweddown_time; }
+    Point<TCoor> getCoor() const { return Point<TCoor>((TCoor)coor.x, (TCoor)coor.y); }
+    THP getHP() const { return hp; }
+    TMP getMP() const { return mp; }
+    TMag getMAG() const { return mag; }
+    int getTeam() const { return team; }
+    TAngle getCarAngle() const { return car_angle; }
+    TAngle getAttackAngle() const { return attack_angle; }
+    TSpeed getLeftSpeed() const { return lspd; }
+    TSpeed getRightSpeed() const { return rspd; }
+    SPD_STATUS getSpdCdStatus() const { return spd_status; }
+    DEF_STATUS getDefStatus() const { return def_status; }
+    BUFF_CD_STATUS getAtkCdStatus() const { return atk_cd_status; }
+    BUFF_CD_STATUS getSpeedUpCdStatus() const { return spdup_cd_status; }
+    BUFF_CD_STATUS getDefCdStatus() const { return def_cd_status; }
+    BUFF_CD_STATUS getSlowDownCdStatus() const { return slowdown_cd_status; }
+    BUFF_CD_STATUS getChangeMagCdStatus() const { return changemag_cd_status; }
+    int getSlowedDownTime() const { return sloweddown_time; }
 
     /// TODO: change to real function.
-    int getTime() { return game ? game->getTime() : -1; }
+    TFrame getTime() const { return game ? game->getTime() : -1; }
 
     /// 判断是否在界外
     ///    
@@ -51,7 +51,7 @@ public:
     ///     则设置为spd_status*SPD_BASE，否则设置为_lspd。
     ///     @param _lspd 设置的左轮速度
     ///     @return    设置后的左轮速度
-    double setLeftSpeed(double _lspd);
+    TSpeed setLeftSpeed(TSpeed _lspd);
 
     /// 设置右轮速度
     ///    
@@ -60,7 +60,7 @@ public:
     ///     则设置为spd_status*SPD_BASE，否则设置为_rspd。
     ///     @param _rspd 设置的右轮速度
     ///     @return    设置后的右轮速度
-    double setRightSpeed(double _rspd);
+    TSpeed setRightSpeed(TSpeed _rspd);
 
     /// 旋转瞄准方向
     ///    
@@ -69,7 +69,7 @@ public:
     ///     则设置为ROTATE_SPD，否则设置为_angle。
     ///     @param _angle 瞄准逆时针旋转角度
     ///     @return    旋转后后的瞄准方向相对前进方向的逆时针角度
-    double rotateAttack(double _angle);
+    TAngle rotateAttack(TAngle _angle);
 
     /// 换弹夹
     ///    
@@ -115,13 +115,12 @@ protected:
     /// 小车构造函数
     ///    
     ///     设定初始位置、车头方向、所属队伍，该Car类只能由Game类创造实例。
-    ///     @param _map 小车所处地图指针
     ///     @param _coor 初始坐标
     ///     @param _car_angle 初始车头朝向
     ///     @param _team 所属队伍
-    Car(Game* _game, Map* _map, Point<int> _coor = Point<int>(0, 0), double _car_angle = 0.0, int _team = 0)
-        :car_angle(_car_angle), team(_team), map(_map) 
-    { coor.x = (double)_coor.x; coor.y = (double)_coor.y; }
+    Car(Point<TCoor> _coor = Point<TCoor>(0, 0), double _car_angle = 0.0, int _team = 0)
+        :car_angle(_car_angle), team(_team)
+    { coor.x = (TCoor)_coor.x; coor.y = (TCoor)_coor.y; }
 
     /// 导出回放文件结构体
     ///    
@@ -163,15 +162,15 @@ private:
     ///     更新小车状态
     void statusUpdate();
 
-    double hp = HP_MAX,  /// 血量，范围[0, HP_MAX]
-        lspd = 0.0,   /// 左轮速度，范围[-spd_status*SPD_BASE, spd_status*SPD_BASE]
-        rspd = 0.0,   /// 右轮速度，范围[-spd_status*SPD_BASE, spd_status*SPD_BASE]
-        car_angle = 0.0,  /// 车头方向，范围[0, 360)，以水平向右为起始，逆时针计算
-        attack_angle = 0.0;  /// 相对于前进方向的射击角度，范围[0, 360)，以车头方向为起始，逆时针计算
-    int mp = MP_MAX,  /// 技能，范围[0, MP_MAX]
-        mag = MAG_MAX,  /// 弹夹，范围[0, MAG_MAX]
-        team = 0,  /// 队伍id
-        def_cd_time = 0,  /// 能量护罩释放时间
+    THP hp = HP_MAX;  /// 血量，范围[0, HP_MAX]
+    TSpeed lspd = 0.0;   /// 左轮速度，范围[-spd_status*SPD_BASE, spd_status*SPD_BASE]
+    TSpeed rspd = 0.0;   /// 右轮速度，范围[-spd_status*SPD_BASE, spd_status*SPD_BASE]
+    TAngle car_angle = 0.0;  /// 车头方向，范围[0, 360)，以水平向右为起始，逆时针计算
+    TAngle attack_angle = 0.0;  /// 相对于前进方向的射击角度，范围[0, 360)，以车头方向为起始，逆时针计算
+    TMP mp = MP_MAX;  /// 技能，范围[0, MP_MAX]
+    TMag mag = MAG_MAX;  /// 弹夹，范围[0, MAG_MAX]
+    int team = 0;  /// 队伍id
+    TFrame def_cd_time = 0,  /// 能量护罩释放时间
         atk_cd_time = 0,  /// 攻击释放时间
         changemag_cd_time = 0,  /// 换弹夹时间
         spdup_cd_time = 0,  /// 加速释放时间
@@ -179,11 +178,14 @@ private:
         sloweddown_time = 0;  /// 开始被减速时间
     bool useBuff = false, useRotate = false;  /// 保证每帧主动技能和攻击转向只能被调用一次
     PIInstruction buffRecord = PIInstruction_NULL;  /// 记录该帧内所使用buff
-    Map* map = NULL;  /// 所属地图
-    Game* game = NULL;  ///所属游戏控制类
-    Point<double> coor = Point<double>(0.0, 0.0);  /// 坐标，内部计算均采用double类型，对外呈现均为int整型
+
+    // TODO
+    const Map* map = NULL;  /// 所属地图
+    const Game* game = NULL;  ///所属游戏控制类
+    Point<TCoor> coor = Point<TCoor>(0.0, 0.0);  /// 坐标，内部计算均采用double类型，对外呈现均为int整型
     SPD_STATUS spd_status = SPD_NORM;  /// 速度状态
     DEF_STATUS def_status = DEF_NORM;  /// 防御状态
     BUFF_CD_STATUS slowdown_cd_status = BUFF_NORM, spdup_cd_status = BUFF_NORM, 
         atk_cd_status = BUFF_NORM, def_cd_status = BUFF_NORM, changemag_cd_status = BUFF_NORM;  /// 各技能冷却状态
+
 };

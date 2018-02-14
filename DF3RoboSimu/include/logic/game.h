@@ -12,14 +12,15 @@
 //3.≥¨ ±ºı…À
 //4.≈–∂œ «∑ÒΩ· ¯
 
+#include "map.h"
 #include "car.h"
 
 class Game {
 public:
     Game();
-    int getTime() { return frame; }
+    TFrame getTime() const { return frame; }
 
 private:
-    int frame;
+    TFrame frame;
     Car *car1, *car2;
 };

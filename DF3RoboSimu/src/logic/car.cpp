@@ -23,7 +23,7 @@ bool Car::isOOR()
     return (coor.x<0 || coor.x>MAP_WIDTH - 1 || coor.y<0 || coor.y >MAP_HEIGHT - 1) ? true : false;
 }
 
-double Car::setLeftSpeed(double _lspd)
+TSpeed Car::setLeftSpeed(TSpeed _lspd)
 {
     double spd_limit = SPD_BASE * SPD_VAL[spd_status];
     if (_lspd < -spd_limit)
@@ -36,7 +36,7 @@ double Car::setLeftSpeed(double _lspd)
     return lspd;
 }
 
-double Car::setRightSpeed(double _rspd)
+TSpeed Car::setRightSpeed(TSpeed _rspd)
 {
     double spd_limit = SPD_BASE * SPD_VAL[spd_status];
     if (_rspd < -spd_limit)
@@ -49,7 +49,7 @@ double Car::setRightSpeed(double _rspd)
     return rspd;
 }
 
-double Car::rotateAttack(double _angle)
+TAngle Car::rotateAttack(TAngle _angle)
 {
     if (!useRotate)
     {
@@ -89,7 +89,7 @@ bool Car::emitSlowdown()
     if (slowdown_cd_status == BUFF_NORM && atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM
         && mp >= BUFF_MP[BUFF_SLOWDOWN] && !useBuff)
     {
-        map->slowdown(coor, car_angle);
+        map->slowdown(coor, car_angle); //TODO
         mp -= BUFF_MP[BUFF_SLOWDOWN];
         atk_cd_status = slowdown_cd_status = BUFF_CD;
         atk_cd_time = slowdown_cd_time = getTime();        
@@ -138,7 +138,7 @@ bool Car::attack(ATK_NUM_MAG num)
 {
     if (atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM && mag >= num && !useBuff)
     {
-        map->attack(coor, fmod(car_angle + attack_angle, 360.0), num);
+        map->attack(coor, fmod(car_angle + attack_angle, 360.0), num); //TODO
         mag -= num;
         atk_cd_status = BUFF_CD;
         atk_cd_time = getTime();
@@ -153,7 +153,7 @@ bool Car::attack(ATK_NUM_MAG num)
 
 void Car::getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props)
 {
-    map->getView(this, cars, obs, props);
+    map->getView(this, cars, obs, props); //TODO
 }
 
 PlayerInfo Car::frameRoutine()
@@ -162,7 +162,7 @@ PlayerInfo Car::frameRoutine()
     statusUpdate();
 
     // 2.调用选手函数
-    playerFunc(this, map, game);
+    playerFunc(this, map, game); //TODO
 
     // 3.移动到下一位置
     map->setNextPos(this);
