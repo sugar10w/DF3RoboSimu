@@ -1,5 +1,5 @@
 // 道具
-#include "..\..\include\logic\prop.h"
+#include "../../include/logic/prop.h"
 
 
 Prop::Prop(PROP_TYPE t, int _x, int _y,int _owner)
@@ -15,8 +15,10 @@ Prop::Prop(PROP_TYPE t, int _x, int _y,int _owner)
 
 bool Prop::if_gotcha(const Car& c)
 {   
-    // TODO  1 距离检测 2 HP/MP包的主人检测
-    return false;
+    if (c.getCoor().getDistance(pos) < RADIUS_PROP && c.getTeam == owner)
+        return true;
+    else
+        return false;
 }
 
 

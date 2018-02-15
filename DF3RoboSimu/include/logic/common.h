@@ -2,6 +2,9 @@
 #pragma once
 
 #include <cmath>
+#include <string>
+#include <fstream>
+#include <iostream>
 
 // 类型定义
 typedef double  TCoor;  // 坐标
@@ -93,24 +96,4 @@ typedef struct
     PROP_TYPE tp;
     Point<int> pos;
 } prop_info;
-
-
-//道具位置
-const TCoor SPEED_BUFF_X = 0.5*MAP_WIDTH;
-const TCoor SPEED_BUFF_Y = 0.25*MAP_HEIGHT;
-
-const TCoor DEF_BUFF_X = 0.5*MAP_WIDTH;
-const TCoor DEF_BUFF_Y = 0.75*MAP_HEIGHT;
-
-const TCoor HP_PAK1_X = 20;
-const TCoor HP_PAK1_Y = 20;
-
-const TCoor MP_PAK1_X = 20;
-const TCoor MP_PAK1_Y = MAP_HEIGHT - 20;
-
-const TCoor HP_PAK2_X = MAP_WIDTH - 20;
-const TCoor HP_PAK2_Y = MAP_HEIGHT- 20;
-
-const TCoor MP_PAK2_X = MAP_WIDTH - 20;
-const TCoor MP_PAK2_Y = 20;
 
