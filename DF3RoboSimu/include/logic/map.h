@@ -17,6 +17,8 @@
 //    std::vector<obs_info>& obs, std::vector<prop_info>& props)
 //获取小车视野内其余小车、障碍物、道具的信息
 
+#pragma once
+
 #include"common.h"
 #include"car.h"
 #include"prop.h"
@@ -31,11 +33,8 @@ public:
     Prop SpeedBuff = Prop(SPD_BUFF, SPEED_BUFF_X, SPEED_BUFF_Y, 0);
     Prop DefendBuff = Prop(DEF_BUFF, DEF_BUFF_X, DEF_BUFF_Y, 0);
     //Obstacle
-    std::vector<Point<double>> Obstacle;//障碍物位置
+    std::vector<Point<TCoor>> Obstacle;//障碍物位置
     //car
-    Car* car1;
-    Car* car2;
-
-
+    const Car* car[2];
 };
 

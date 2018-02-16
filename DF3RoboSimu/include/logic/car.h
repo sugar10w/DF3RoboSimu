@@ -17,12 +17,13 @@ extern void playerFunc(Car* car, Map* map, Game* game);
 ///
 class Car {
 public:
-    friend class Map;
+    //friend class Map;
+
     Point<TCoor> getCoor() const { return Point<TCoor>((TCoor)coor.x, (TCoor)coor.y); }
     THP getHP() const { return hp; }
     TMP getMP() const { return mp; }
     TMag getMAG() const { return mag; }
-    int getTeam() const { return team; }
+    PLAYER_ID getTeam() const { return team; }
     TAngle getCarAngle() const { return car_angle; }
     TAngle getAttackAngle() const { return attack_angle; }
     TSpeed getLeftSpeed() const { return lspd; }
@@ -34,7 +35,7 @@ public:
     BUFF_CD_STATUS getDefCdStatus() const { return def_cd_status; }
     BUFF_CD_STATUS getSlowDownCdStatus() const { return slowdown_cd_status; }
     BUFF_CD_STATUS getChangeMagCdStatus() const { return changemag_cd_status; }
-    int getSlowedDownTime() const { return sloweddown_time; }
+    TFrame getSlowedDownTime() const { return sloweddown_time; }
 
     /// TODO: change to real function.
     TFrame getTime() const { return game ? game->getTime() : -1; }
@@ -111,16 +112,33 @@ public:
     ///     @note    3个vector内容会先被清空。
     void getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props);
 
-protected:
+
     /// 小车构造函数
     ///    
     ///     设定初始位置、车头方向、所属队伍，该Car类只能由Game类创造实例。
     ///     @param _coor 初始坐标
     ///     @param _car_angle 初始车头朝向
     ///     @param _team 所属队伍
-    Car(Point<TCoor> _coor = Point<TCoor>(0, 0), double _car_angle = 0.0, int _team = 0)
+    Car(Point<TCoor> _coor = Point<TCoor>(0, 0), TAngle _car_angle = 0.0, PLAYER_ID _team = UNKNOWN_PLAYER)
         :car_angle(_car_angle), team(_team)
-    { coor.x = (TCoor)_coor.x; coor.y = (TCoor)_coor.y; }
+    {
+        coor.x = (TCoor)_coor.x; coor.y = (TCoor)_coor.y;
+    }
+
+    /// 小车构造函数
+    ///    
+    ///     设定初始位置、车头方向、所属队伍，该Car类只能由Game类创造实例。
+    ///     @param _game 
+    ///     @param _map   
+    ///     @param _coor 初始坐标
+    ///     @param _car_angle 初始车头朝向
+    ///     @param _team 所属队伍
+    Car(const Game* _game, const Map* _map,
+        Point<TCoor> _coor = Point<TCoor>(0, 0), TAngle _car_angle = 0.0, PLAYER_ID _team = UNKNOWN_PLAYER)
+        : game(_game), map(_map), coor(_coor), car_angle(_car_angle), team(_team)
+    { }
+
+protected:
 
     /// 导出回放文件结构体
     ///    
@@ -169,7 +187,7 @@ private:
     TAngle attack_angle = 0.0;  /// 相对于前进方向的射击角度，范围[0, 360)，以车头方向为起始，逆时针计算
     TMP mp = MP_MAX;  /// 技能，范围[0, MP_MAX]
     TMag mag = MAG_MAX;  /// 弹夹，范围[0, MAG_MAX]
-    int team = 0;  /// 队伍id
+    PLAYER_ID team = UNKNOWN_PLAYER;  /// 队伍id
     TFrame def_cd_time = 0,  /// 能量护罩释放时间
         atk_cd_time = 0,  /// 攻击释放时间
         changemag_cd_time = 0,  /// 换弹夹时间
