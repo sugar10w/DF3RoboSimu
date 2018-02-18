@@ -54,8 +54,41 @@ bool Map::init()
             paras = split(temp, ',');
             Obstacle.push_back(Point<TCoor>(atof(paras[2].c_str()), atof(paras[1].c_str())));
         }
+        return true;
     }
 }
+
+bool Map::aim_check(Point<TCoor> P_attack, TAngle car_angle,TAngle attack_angle,Point<TCoor> P_target)
+{
+    TAngle theta = car_angle + attack_angle;//与x正方向夹角
+    //l: cos(theta)*(y-ya)+sin(theta)*（x-xa)=0
+    TCoor distance = abs(cos(theta)*(P_target.y - P_attack.y) + sin(theta)*(P_target.x - P_attack.x));
+    if (distance < RADIUS_CAR) {
+        int len = Obstacle.size();
+        bool is_obstacle = false;
+        for (int i = 0; i < len; i++) {
+            Point<TCoor> p = Obstacle[i];
+            if (abs(cos(theta)*(p.y - P_attack.y) + sin(theta)*(p.x - P_attack.x)) < ObstacleRadius) {
+                is_obstacle = true;
+                break;
+            }
+        }
+        if (!is_obstacle) {
+            return true;//命中
+        }
+    }
+    return false;//未命中
+}
+
+std::vector<Point<TCoor>> Map::get_view(Point<TCoor> p_car)
+{
+    std::vector<Point<TCoor>> result;
+
+    return result;
+}
+
+
+
 std::vector<std::string> split(std::string s, char c) {
     int len = s.length;
     int index_start = 0;

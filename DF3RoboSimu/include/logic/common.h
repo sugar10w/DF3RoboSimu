@@ -25,6 +25,7 @@ const TFrame FRAME_MINUTE = 60 * FREQ;
 const TCoor MAP_WIDTH = 400;
 const TCoor MAP_HEIGHT = 300;
 const THP ATTACK_OOR = 5 / FREQ;  //出界伤害
+const TCoor RADIUS_CAR = 5;
 
 //小车参数
 const THP HP_MAX = 100.0;

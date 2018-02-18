@@ -1,7 +1,7 @@
 // 地图，包括视野、命中判定、碰撞判定
 
-//需要void slowdown(Point<double> coor, double car_angle)
-//1.判断被攻击小车
+//需要void slowdown(Point<double> coor, double car_angle，)
+//1.判断被减速小车
 //2.调用该car->slowedDown()
 
 
@@ -38,6 +38,7 @@ public:
     
     //初始化地图
     bool init();
-
+    bool aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target);
+    std::vector<Point<TCoor>> get_view(Point<TCoor> p_car);
 };
 
