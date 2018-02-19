@@ -14,7 +14,7 @@ typedef double  TSpeed; // 速度
 typedef float   TTime;  // 时间
 typedef int     TFrame; // 帧数
 
-enum PLAYER_ID {P0 = 0, P1 = 1, UNKNOWN_PLAYER = 10};  // 玩家ID
+enum PLAYER_ID {P0 = 0, P1 = 1, DRAW = 9, UNKNOWN_PLAYER = 10};  // 玩家ID
 
 // 公用常数
 const TFrame FREQ = 30;
@@ -24,6 +24,8 @@ const TFrame FRAME_MINUTE = 60 * FREQ;
 const TCoor MAP_WIDTH = 400;
 const TCoor MAP_HEIGHT = 300;
 const THP ATTACK_OOR = 5 / FREQ;  //出界伤害
+const TFrame TIMEOUT_TIME[] = { 1 * FRAME_MINUTE, 2 * FRAME_MINUTE, 3 * FRAME_MINUTE };
+const THP TIMEOUT_HP[] = { 1.0 / FREQ, 2.0 / FREQ, 3.0 / FREQ };
 
 //小车参数
 const THP HP_MAX = 100.0;

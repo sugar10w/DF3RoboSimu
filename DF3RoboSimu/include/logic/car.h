@@ -7,7 +7,6 @@
 #include <vector>
 
 class Car;
-extern void playerFunc(Car* car, Map* map, Game* game);
 
 //    \brief  小车仿真类  
 //  
@@ -18,6 +17,7 @@ extern void playerFunc(Car* car, Map* map, Game* game);
 class Car {
 public:
     //friend class Map;
+    friend class Game;
 
     Point<TCoor> getCoor() const { return Point<TCoor>((TCoor)coor.x, (TCoor)coor.y); }
     THP getHP() const { return hp; }
@@ -143,6 +143,7 @@ protected:
     // 导出回放文件结构体
     //    
     //     填充小车的当前帧信息
+    //     @return    小车的当前帧信息
     PlayerInfo getPlayerInfo();
 
     // 受到延缓射线攻击
@@ -161,13 +162,13 @@ protected:
     //    
     //     设置小车技能值
     //     @param _mp 新技能值
-    void setMP(int _mp);
+    void setMP(TMP _mp);
 
     // 设置小车生命值
     //    
     //     设置小车生命值
     //     @param _hp 新生命值
-    void setHP(int _hp);
+    void setHP(THP _hp);
 
     // 每帧刷新状态
     //    

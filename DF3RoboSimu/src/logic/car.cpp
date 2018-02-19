@@ -161,13 +161,10 @@ PlayerInfo Car::frameRoutine()
     // 1.更新小车状态
     statusUpdate();
 
-    // 2.调用选手函数
-    playerFunc(this, map, game); //TODO
-
-    // 3.移动到下一位置
+    // 2.移动到下一位置
     map->setNextPos(this);
 
-    // 4.返回小车回放文件结构体
+    // 3.返回小车回放文件结构体
     return getPlayerInfo();
 }
 
@@ -217,7 +214,7 @@ void Car::statusUpdate()
     }
 }
 
-void Car::setMP(int _mp)
+void Car::setMP(TMP _mp)
 {
     if (_mp < 0)
         mp = 0;
@@ -227,7 +224,7 @@ void Car::setMP(int _mp)
         mp = _mp;
 }
 
-void Car::setHP(int _hp)
+void Car::setHP(THP _hp)
 {
     if (_hp < 0)
         hp = 0;
