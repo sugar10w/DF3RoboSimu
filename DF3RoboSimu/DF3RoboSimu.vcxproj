@@ -150,9 +150,9 @@
     <ClInclude Include="include\logic\car.h" />
     <ClInclude Include="include\logic\common.h" />
     <ClInclude Include="include\logic\game.h" />
+    <ClInclude Include="include\logic\log_format.h" />
     <ClInclude Include="include\logic\map.h" />
     <ClInclude Include="include\logic\prop.h" />
-    <ClInclude Include="infoFormat.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\logic\car.cpp" />

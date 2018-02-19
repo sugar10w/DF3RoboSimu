@@ -1,7 +1,7 @@
 // 地图，包括视野、命中判定、碰撞判定
 
-//需要void slowdown(Point<double> coor, double car_angle)
-//1.判断被攻击小车
+//需要void slowdown(Point<double> coor, double car_angle，)
+//1.判断被减速小车
 //2.调用该car->slowedDown()
 
 
@@ -34,19 +34,44 @@
 #include"common.h"
 #include"car.h"
 #include"prop.h"
+#include "game.h"
 
 class Map {
-public:
+
+private:
     //Prop
-    Prop HpPackage_1 = Prop(HP_PAK, HP_PAK1_X, HP_PAK1_Y, 1);
-    Prop HpPackage_2 = Prop(HP_PAK, HP_PAK2_X, HP_PAK2_Y, 2);
-    Prop MpPackage_1 = Prop(MP_PAK, MP_PAK1_X, MP_PAK1_Y, 1);
-    Prop MpPackage_2 = Prop(MP_PAK, MP_PAK2_X, MP_PAK2_Y, 2);
-    Prop SpeedBuff = Prop(SPD_BUFF, SPEED_BUFF_X, SPEED_BUFF_Y, 0);
-    Prop DefendBuff = Prop(DEF_BUFF, DEF_BUFF_X, DEF_BUFF_Y, 0);
-    //Obstacle
-    std::vector<Point<TCoor>> Obstacle;//障碍物位置
-    //car
-    const Car* car[2];
+    std::vector<Prop> props;
+    //障碍物位置 Obstacle 
+    std::vector<obs_info> Obstacle; 
+    //car 其实只需要两个车的位置信息，考虑直接向Game索要
+    const Game* game; //TODO
+
+public:
+    
+    // 构造函数，导入const Game*和const char*输入文件名
+    Map(const Game* _game, const char* filename = "../../data/map.txt") {
+        init(_game, filename);
+    }
+
+    // 初始化地图
+    bool init(const Game* _game, const char* filename = "../../data/map.txt");
+    
+    // 更新道具
+    void refreshProp(TFrame frame);
+    
+    // 给出初始坐标，输出到参数内
+    bool getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle& car_angle) const;
+
+    // 判断命中
+    int aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle);
+    // 刷新小车视野 TODO 改成获得返回值，保留const设定
+    void getView(Car* car, std::vector<car_info>& cars) const;
+    
+    // 获取下一瞬间坐标
+    Point<TCoor> getNextPos(const Car* car) const;
+
+    // 地图当前信息，用于导出
+    MapInfo getMapInfo() const;
+
 };
 

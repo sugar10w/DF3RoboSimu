@@ -2,6 +2,9 @@
 #pragma once
 
 #include <cmath>
+#include <string>
+#include <fstream>
+#include <iostream>
 
 // 类型定义
 typedef double  TCoor;  // 坐标
@@ -26,6 +29,7 @@ const TCoor MAP_HEIGHT = 300;
 const THP ATTACK_OOR = 5 / FREQ;  //出界伤害
 const TFrame TIMEOUT_TIME[] = { 1 * FRAME_MINUTE, 2 * FRAME_MINUTE, 3 * FRAME_MINUTE };
 const THP TIMEOUT_HP[] = { 1.0 / FREQ, 2.0 / FREQ, 3.0 / FREQ };
+const TCoor RADIUS_CAR = 5;
 
 //小车参数
 const THP HP_MAX = 100.0;
@@ -70,7 +74,7 @@ public:
     Point() :x(0), y(0) {}
     Point(T _x, T _y) :x(_x), y(_y) {}
 
-    double getDistance(Point _p) {
+    double getDistance(Point _p) const {
         return sqrt((double)((x - _p.x)*(x - _p.x) + (y - _p.y)*(y - _p.y)));
     }
 
@@ -95,24 +99,4 @@ typedef struct
     PROP_TYPE tp;
     Point<TCoor> pos;
 } prop_info;
-
-
-//道具位置
-const TCoor SPEED_BUFF_X = 0.5*MAP_WIDTH;
-const TCoor SPEED_BUFF_Y = 0.25*MAP_HEIGHT;
-
-const TCoor DEF_BUFF_X = 0.5*MAP_WIDTH;
-const TCoor DEF_BUFF_Y = 0.75*MAP_HEIGHT;
-
-const TCoor HP_PAK1_X = 20;
-const TCoor HP_PAK1_Y = 20;
-
-const TCoor MP_PAK1_X = 20;
-const TCoor MP_PAK1_Y = MAP_HEIGHT - 20;
-
-const TCoor HP_PAK2_X = MAP_WIDTH - 20;
-const TCoor HP_PAK2_Y = MAP_HEIGHT- 20;
-
-const TCoor MP_PAK2_X = MAP_WIDTH - 20;
-const TCoor MP_PAK2_Y = 20;
 

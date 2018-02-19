@@ -133,7 +133,7 @@ public:
     //     @param _coor 初始坐标
     //     @param _car_angle 初始车头朝向
     //     @param _team 所属队伍
-    Car(const Game* _game, const Map* _map,
+    Car(Game* _game, const Map* _map,
         Point<TCoor> _coor = Point<TCoor>(0, 0), TAngle _car_angle = 0.0, PLAYER_ID _team = UNKNOWN_PLAYER)
         : game(_game), map(_map), coor(_coor), car_angle(_car_angle), team(_team)
     { }
@@ -156,7 +156,7 @@ protected:
     //     由Map设定坐标和车头方向。
     //     @param _coor 小车坐标
     //     @param _tank_angle 车头方向
-    void setPos(Point<double> _coor, double _car_angle);
+    void setPos(Point<TCoor> _coor, TAngle _car_angle);
 
     // 设置小车技能值
     //    
@@ -200,7 +200,7 @@ private:
 
     // TODO
     const Map* map = NULL;  // 所属地图
-    const Game* game = NULL;  //所属游戏控制类
+    Game* game = NULL;  //所属游戏控制类
     Point<TCoor> coor = Point<TCoor>(0.0, 0.0);  // 坐标，内部计算均采用double类型，对外呈现均为int整型
     SPD_STATUS spd_status = SPD_NORM;  // 速度状态
     DEF_STATUS def_status = DEF_NORM;  // 防御状态

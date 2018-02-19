@@ -5,7 +5,7 @@
 
 Game::Game(char* recordFile, char* mapFile) {
 
-    map = new Map(mapFile); //TODO: 导入文件名信息
+    map = new Map(this/*, mapFile*/); //TODO: 导入文件名信息
 
     if (!map)
     {

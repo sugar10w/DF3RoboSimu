@@ -45,7 +45,7 @@
     <ClInclude Include="include\controller\player.h">
       <Filter>头文件\controller</Filter>
     </ClInclude>
-    <ClInclude Include="infoFormat.h">
+    <ClInclude Include="include\logic\log_format.h">
       <Filter>头文件\logic</Filter>
     </ClInclude>
   </ItemGroup>

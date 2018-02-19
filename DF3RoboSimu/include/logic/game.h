@@ -27,8 +27,25 @@ public:
 
     // 构造函数；创造Map和Car
     Game(char* recordFile, char* mapFile);
-    
+    // 获取当前的帧数
     TFrame getTime() const { return frame; }
+
+    /* TODO 
+    bool 交互动作 {
+        if (map->判断命中) {
+            对方被攻击; 
+            return true;
+        } 
+        return false;
+    } 
+    */
+
+    // Car的交互动作：攻击
+    bool attack(PLAYER_ID id);
+    // Car的交互动作：减速
+    bool slowdown(PLAYER_ID id);
+    
+
 protected:
     // 每帧更新状态
     //     @return    P0/P1 为获胜方，DRAW为平局，UNKNOWN_PLAYER为还未分出胜负

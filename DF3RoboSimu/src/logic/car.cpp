@@ -12,7 +12,7 @@ void Car::slowedDown()
     sloweddown_time = getTime();
 }
 
-void Car::setPos(Point<double> _coor, double _car_angle)
+void Car::setPos(Point<TCoor> _coor, TAngle _car_angle)
 {
     coor = _coor; 
     car_angle = fmod(_car_angle, 360.0);
@@ -89,7 +89,7 @@ bool Car::emitSlowdown()
     if (slowdown_cd_status == BUFF_NORM && atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM
         && mp >= BUFF_MP[BUFF_SLOWDOWN] && !useBuff)
     {
-        map->slowdown(coor, car_angle); //TODO
+        game->slowdown(getTeam()); //TODO
         mp -= BUFF_MP[BUFF_SLOWDOWN];
         atk_cd_status = slowdown_cd_status = BUFF_CD;
         atk_cd_time = slowdown_cd_time = getTime();        
@@ -138,7 +138,8 @@ bool Car::attack(ATK_NUM_MAG num)
 {
     if (atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM && mag >= num && !useBuff)
     {
-        map->attack(coor, fmod(car_angle + attack_angle, 360.0), num); //TODO
+        game->attack(getTeam());
+        //map->attack(coor, fmod(car_angle + attack_angle, 360.0), num); //TODO
         mag -= num;
         atk_cd_status = BUFF_CD;
         atk_cd_time = getTime();
@@ -153,7 +154,7 @@ bool Car::attack(ATK_NUM_MAG num)
 
 void Car::getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props)
 {
-    map->getView(this, cars, obs, props); //TODO
+    map->getView(this, cars); //TODO
 }
 
 PlayerInfo Car::frameRoutine()
@@ -162,7 +163,8 @@ PlayerInfo Car::frameRoutine()
     statusUpdate();
 
     // 2.移动到下一位置
-    map->setNextPos(this);
+    //map->setNextPos(this); 
+    coor = map->getNextPos(this);
 
     // 3.返回小车回放文件结构体
     return getPlayerInfo();
