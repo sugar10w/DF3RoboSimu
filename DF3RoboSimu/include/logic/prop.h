@@ -13,7 +13,8 @@ private:
 public:
     Prop(PROP_TYPE t, int _x, int _y, int _owner);
     Point<double> get_pos() { return pos; }
-    
+    PROP_TYPE get_type() { return tp; }
+   
     bool if_gotcha(const Car& c);
     
     bool is_available() const { return flag_available; }

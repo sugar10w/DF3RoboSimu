@@ -23,22 +23,16 @@
 class Map {
 public:
     //Prop
-    Prop HpPackage_1 ;
-    Prop HpPackage_2 ;
-    Prop MpPackage_1 ;
-    Prop MpPackage_2 ;
-    Prop SpeedBuff ;
-    Prop DefendBuff ;
+    std::vector<Prop> props;
     //Obstacle
-    TCoor ObstacleRadius;
-    std::vector<Point<TCoor>> Obstacle;//障碍物位置
+    std::vector<obs_info> Obstacle;
     //car
     Car* car1;
     Car* car2;
     
     //初始化地图
     bool init();
-    bool aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target);
-    std::vector<Point<TCoor>> get_view(Point<TCoor> p_car);
+    int aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle);
+    void getView(Car* car, std::vector<car_info>& cars);
 };
 
