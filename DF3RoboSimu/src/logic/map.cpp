@@ -43,6 +43,8 @@ bool Map::init(const Game* _game, const char* filename)
         paras = split(temp, ',');
         //car1 = new Car(Point<TCoor>(atof(paras[1].c_str()), atof(paras[2].c_str())), atof(paras[3].c_str()), 1);
         //toDo: 修改
+
+
         std::getline(file, temp);
         paras = split(temp, ',');
         //car2 = new Car(Point<TCoor>(atof(paras[1].c_str()), atof(paras[2].c_str())), atof(paras[3].c_str()), 2);
@@ -57,20 +59,60 @@ bool Map::init(const Game* _game, const char* filename)
         }
 }
 
-int Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle)
+void Map::refreshProp(TFrame frame)
 {
-    //TODO: 
-    // - 改成enum格式输出
+    //五秒后开始生成每种道具
+    if (game->getTime() >= PROP_START_TIME) {
+        for (int i = 0; i < props.size(); i++)
+            props[i].round_operation();
+    }
+}
+
+bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle) const
+{
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cout << "未能成功打开地图文件" << filename << std::endl;
+        return false;
+    }
+    else {
+        std::string temp;
+        std::vector<std::string> paras;
+        for (int i = 0; i < 6; i++) {
+            std::getline(file, temp);//跳过道具参数
+        }
+        std::getline(file, temp);
+        //car1
+        if (id == 1) {
+            paras = split(temp, ',');
+            birth_point = Point<TCoor>(atof(paras[1].c_str()), atof(paras[2].c_str()));
+            car_angle = atof(paras[3].c_str());
+            return true;
+        }
+        std::getline(file, temp);
+        //car2
+        if (id == 2) {
+            paras = split(temp, ',');
+            birth_point = Point<TCoor>(atof(paras[1].c_str()), atof(paras[2].c_str()));
+            car_angle = atof(paras[3].c_str());
+            return true;
+        }
+        return false;
+    }
+}
+
+hit_status Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle)
+{
 
     TAngle theta = car_angle + attack_angle;//与x正方向夹角
     //l: cos(theta)*(y-ya)+sin(theta)*（x-xa)=0
-    TCoor distance = abs(cos(theta)*(P_target.y - P_attack.y) + sin(theta)*(P_target.x - P_attack.x));
+    TCoor distance = abs(cos_d(theta)*(P_target.y - P_attack.y) + sin_d(theta)*(P_target.x - P_attack.x));
     if (distance < RADIUS_CAR) {
         int len = Obstacle.size();
         bool is_obstacle = false;
         for (int i = 0; i < len; i++) {
             Point<TCoor> p = Obstacle[i].coor;
-            if (abs(cos(theta)*(p.y - P_attack.y) + sin(theta)*(p.x - P_attack.x)) < Obstacle[i].radius) {
+            if (abs(cos_d(theta)*(p.y - P_attack.y) + sin_d(theta)*(p.x - P_attack.x)) < Obstacle[i].radius) {
                 is_obstacle = true;
                 break;
             }
@@ -79,19 +121,19 @@ int Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle,
             TCoor l = P_attack.getDistance(P_target);//攻击者和目标圆心距离
             TCoor s = sqrt(l*l - distance*distance) - sqrt(RADIUS_CAR - distance);
             //命中点
-            TCoor xx = P_attack.x + cos(theta)*s;
-            TCoor yy = P_attack.y + sin(theta)*s;
+            TCoor xx = P_attack.x + cos_d(theta)*s;
+            TCoor yy = P_attack.y + sin_d(theta)*s;
 
-            TAngle deta_phi = abs(atan2(yy, xx) - target_angle);
+            TAngle deta_phi = abs(atan2_d(yy, xx) - target_angle);
             if (deta_phi <= 45)
-                return 1;//命中正面
+                return front;//命中正面
             else if (deta_phi <= 135)
-                return 2;//命中侧面
+                return side;//命中侧面
             else
-                return 3;//命中背面
+                return back;//命中背面
         }
     }
-    return 0;//未命中  
+    return miss;//未命中  
 }
 
 void Map::getView(Car * car, std::vector<car_info>& cars) const {
@@ -104,7 +146,7 @@ void Map::getView(Car * car, std::vector<car_info>& cars) const {
     for (int i = 0; i < props.size(); i++) {
         Point<TCoor> prop_p = props[i].get_pos();
         bool be_cover = false;
-        TAngle theta = atan2(car_p.y - prop_p.y, car_p.x - prop_p.x);//车与道具所在直线的角度
+        TAngle theta = atan2_d(car_p.y - prop_p.y, car_p.x - prop_p.x);//车与道具所在直线的角度
         TAngle deta_phi = abs(theta - car->getAttackAngle());//与视野中线的夹角
 
         if (deta_phi <= 22.5) {
@@ -124,14 +166,14 @@ void Map::getView(Car * car, std::vector<car_info>& cars) const {
     //障碍物判断
     for (int i = 0; i < Obstacle.size(); i++) {
         Point<TCoor> obs_p = Obstacle[i].coor;
-        TAngle theta = atan2(-car_p.y + obs_p.y, -car_p.x + obs_p.x);
+        TAngle theta = atan2_d(-car_p.y + obs_p.y, -car_p.x + obs_p.x);
         TAngle deta_phi = abs(theta - car->getAttackAngle());
         if (deta_phi <= 22.5 + abs(asin(Obstacle[i].radius / obs_p.getDistance(car_p))))
             obstacles_saw.push_back(Obstacle[i]);
     }
     //敌方小车判断
     Point<TCoor> enemy_p = cars[0].coor;
-    TAngle theta = atan2(enemy_p.y - car_p.y, enemy_p.x - car_p.x);
+    TAngle theta = atan2_d(enemy_p.y - car_p.y, enemy_p.x - car_p.x);
     TAngle deta_phi = abs(theta - car->getAttackAngle());
     bool is_visible = true;
     if (deta_phi <= 22.5 + abs(asin(RADIUS_CAR / enemy_p.getDistance(car_p)))) {
@@ -139,7 +181,7 @@ void Map::getView(Car * car, std::vector<car_info>& cars) const {
             Point<TCoor> obs_p = obstacles_saw[i].coor;
             TCoor dis_c2t = car_p.getDistance(enemy_p);//观察者到目标
             TCoor dis_c2o = car_p.getDistance(obs_p);//观察者到障碍
-            TCoor l = abs(cos(theta)*(obs_p.y - car_p.y) + sin(theta)*(obs_p.x - car_p.x));//障碍到观察者-目标连线的距离
+            TCoor l = abs(cos_d(theta)*(obs_p.y - car_p.y) + sin_d(theta)*(obs_p.x - car_p.x));//障碍到观察者-目标连线的距离
             TCoor h = abs((enemy_p.x - car_p.x)*(obs_p.x - car_p.x) + (enemy_p.y - car_p.y)*(obs_p.y - car_p.y)) / dis_c2o;//沿连线距离
             if (h*RADIUS_CAR / dis_c2o + l < obstacles_saw[i].radius) {
                 is_visible = false;
@@ -155,6 +197,56 @@ void Map::getView(Car * car, std::vector<car_info>& cars) const {
     }
     car->getView(cars_saw, obstacles_saw, props_saw);
 }
+
+Point<TCoor> Map::getNextPos(const Car * car) const
+{
+    
+    Point<TCoor> coor_temp;
+    TCoor l = 0.5*(car->getLeftSpeed() + car->getRightSpeed()) / FREQ;//位移距离
+    TAngle beta = getNextAngle(car);
+    coor_temp = Point<TCoor>{ car->getCoor().x + l*cos_d(beta),car->getCoor().y + l*sin_d(beta) };//指令想要移动的位置
+    for (int i = 0; i < Obstacle.size(); i++) {
+        TCoor dis_o2t = Obstacle[i].coor.getDistance(coor_temp);//预计位置和障碍物距离
+        TCoor dis_o2c = Obstacle[i].coor.getDistance(car->getCoor());//原位置和障碍物距离
+        if (dis_o2t< RADIUS_CAR + Obstacle[i].radius) {//如果在到达位置前已经和障碍物相碰
+            //更新要到达位置
+            double deta = (dis_o2t*dis_o2t - l*l - dis_o2c*dis_o2c)*(dis_o2t*dis_o2t - l*l - dis_o2c*dis_o2c) - 4 * l*l*((RADIUS_CAR + Obstacle[i].radius)*(RADIUS_CAR + Obstacle[i].radius) - dis_o2c*dis_o2c);//公式十分复杂，可能出错？
+            if (deta >= 0) {
+                TCoor l = (dis_o2t*dis_o2t - l*l - dis_o2c*dis_o2c - sqrt(deta)) / 2 / l;
+                coor_temp = Point<TCoor>{ car->getCoor().x + l*cos_d(beta),car->getCoor().y + l*sin_d(beta) };
+            }
+        }
+    }
+    return coor_temp;
+}
+
+TAngle Map::getNextAngle(const Car * car) const
+{
+    TAngle deta = (car->getLeftSpeed() - car->getRightSpeed()) / 4 / RADIUS_CAR / FREQ * 180 / 3.14159;
+    return (car->getCarAngle()-deta);
+}
+
+MapInfo Map::getMapInfo() const
+{
+    MapInfo status{ 0,0,0,0,0,0 };
+    status.HP1 = get_prop_status(props[0]);
+    status.HP2 = get_prop_status(props[1]);
+    status.MP1 = get_prop_status(props[2]);
+    status.MP2 = get_prop_status(props[3]);
+    status.speedBuf = get_prop_status(props[4]);
+    status.defendBuff = get_prop_status(props[5]);
+    return status;
+}
+
+TFrame get_prop_status(Prop p){
+    if (p.is_available) {
+        return p.get_ET();
+    }
+    else {
+        return(p.getCD_count() - p.getCD());
+    }
+}
+
 
 // 分解字符串，用于文件读取
 static std::vector<std::string> split(std::string s, char c) {

@@ -30,7 +30,7 @@ const THP ATTACK_OOR = 5 / FREQ;  //出界伤害
 const TFrame TIMEOUT_TIME[] = { 1 * FRAME_MINUTE, 2 * FRAME_MINUTE, 3 * FRAME_MINUTE };
 const THP TIMEOUT_HP[] = { 1.0 / FREQ, 2.0 / FREQ, 3.0 / FREQ };
 const TCoor RADIUS_CAR = 5;
-
+enum hit_status {miss,front,side,back};
 //小车参数
 const THP HP_MAX = 100.0;
 const THP MP_MAX = 100;
@@ -100,3 +100,11 @@ typedef struct
     Point<TCoor> pos;
 } prop_info;
 
+//角度制三角函数函数
+
+double cos_d(double theta) { return cos(theta * 180 / 3.14159); }
+double sin_d(double theta) { return sin(theta * 180 / 3.14159); }
+double tan_d(double theta) { return tan(theta * 180 / 3.14159); }
+
+double atan2_d(double y, double x) { return 180 / 3.14159*atan2(y, x); }
+double asin_d(double s) { return 180 / 3.14159*asin(s); }

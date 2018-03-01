@@ -9,14 +9,6 @@ Prop::Prop(PROP_TYPE t, int _x, int _y, PLAYER_ID _owner)
     CD = PROP_CD_TIME[tp];
 }
 
-bool Prop::if_team(const Car& c) const {
-
-    if (UNKNOWN_PLAYER == owner)
-        return true;
-    else
-        return (owner == c.getTeam());
-}
-
 bool Prop::if_gotcha(const Car& c) const
 {   
     return 
@@ -31,5 +23,8 @@ void Prop::round_operation()
         CD_count++;
         if (CD_count > CD)
             regenerate();
+    }
+    else {
+        exist_time++;
     }
 }
