@@ -2,6 +2,8 @@
 
 // 地图，包括障碍物判定等
 
+
+//初始化
 bool Map::init(const Game* _game, const char* filename)
 {
     game = _game;
@@ -42,8 +44,7 @@ bool Map::init(const Game* _game, const char* filename)
         std::getline(file, temp);
         paras = split(temp, ',');
         //car1 = new Car(Point<TCoor>(atof(paras[1].c_str()), atof(paras[2].c_str())), atof(paras[3].c_str()), 1);
-        //toDo: 修改
-
+        //此处未初始化Car
 
         std::getline(file, temp);
         paras = split(temp, ',');
@@ -59,6 +60,7 @@ bool Map::init(const Game* _game, const char* filename)
         }
 }
 
+//道具刷新
 void Map::refreshProp(TFrame frame)
 {
     //五秒后开始生成每种道具
@@ -68,6 +70,7 @@ void Map::refreshProp(TFrame frame)
     }
 }
 
+//返回初始化坐标
 bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle) const
 {
     std::ifstream file(filename);
@@ -101,6 +104,7 @@ bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle
     }
 }
 
+//命中判断
 hit_status Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle)
 {
 
@@ -136,6 +140,7 @@ hit_status Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack
     return miss;//未命中  
 }
 
+//视野判断
 void Map::getView(Car * car, std::vector<car_info>& cars) const {
     std::vector<car_info> cars_saw;
     std::vector<prop_info> props_saw;
@@ -198,6 +203,7 @@ void Map::getView(Car * car, std::vector<car_info>& cars) const {
     car->getView(cars_saw, obstacles_saw, props_saw);
 }
 
+//小车位置更新
 Point<TCoor> Map::getNextPos(const Car * car) const
 {
     
@@ -220,12 +226,14 @@ Point<TCoor> Map::getNextPos(const Car * car) const
     return coor_temp;
 }
 
+//小车角度更新
 TAngle Map::getNextAngle(const Car * car) const
 {
     TAngle deta = (car->getLeftSpeed() - car->getRightSpeed()) / 4 / RADIUS_CAR / FREQ * 180 / 3.14159;
     return (car->getCarAngle()-deta);
 }
 
+//获取地图信息
 MapInfo Map::getMapInfo() const
 {
     MapInfo status{ 0,0,0,0,0,0 };
@@ -238,6 +246,7 @@ MapInfo Map::getMapInfo() const
     return status;
 }
 
+//查询道具状态，用于地图信息
 TFrame get_prop_status(Prop p){
     if (p.is_available) {
         return p.get_ET();
