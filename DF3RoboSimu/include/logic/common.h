@@ -101,10 +101,12 @@ typedef struct
 } prop_info;
 
 //角度制三角函数函数
+class math_tool {
+public:
+    static double cos_d(double theta) { return cos(theta * 180 / 3.14159); }
+    static double sin_d(double theta) { return sin(theta * 180 / 3.14159); }
+    static double tan_d(double theta) { return tan(theta * 180 / 3.14159); }
 
-double cos_d(double theta) { return cos(theta * 180 / 3.14159); }
-double sin_d(double theta) { return sin(theta * 180 / 3.14159); }
-double tan_d(double theta) { return tan(theta * 180 / 3.14159); }
-
-double atan2_d(double y, double x) { return 180 / 3.14159*atan2(y, x); }
-double asin_d(double s) { return 180 / 3.14159*asin(s); }
+    static double atan2_d(double y, double x) { return 180 / 3.14159*atan2(y, x); }
+    static double asin_d(double s) { return 180 / 3.14159*asin(s); }
+};
