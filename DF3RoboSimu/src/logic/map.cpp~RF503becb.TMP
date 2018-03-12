@@ -1,17 +1,8 @@
-
-// 地图，包括障碍物判定等
-#include "logic/map.h"
-
-
-static double cos_d(double theta) { return cos(theta * 180 / 3.14159); }
-static double sin_d(double theta) { return sin(theta * 180 / 3.14159); }
-static double tan_d(double theta) { return tan(theta * 180 / 3.14159); }
-static double atan2_d(double y, double x) { return 180 / 3.14159*atan2(y, x); }
-static double asin_d(double s) { return 180 / 3.14159*asin(s); }
+#include "..\..\include\logic\map.h"
 
 // 获取道具状态
 static TFrame get_prop_status(Prop p) {
-    if (p.is_available()) {
+    if (p.is_available) {
         return p.get_ET();
     }
     else {
@@ -20,7 +11,7 @@ static TFrame get_prop_status(Prop p) {
 }
 // 分解字符串，用于文件读取
 static std::vector<std::string> split(std::string s, char c) {
-    int len = s.length();
+    int len = s.length;
     int index_start = 0;
     int index_end = 0;
     std::vector<std::string> result;
@@ -38,6 +29,8 @@ static std::vector<std::string> split(std::string s, char c) {
     result.push_back(s.substr(index_start, index_end - 1));
     return result;
 }
+
+// 地图，包括障碍物判定等
 
 bool Map::init(const Game* _game, const char* filename)
 {
@@ -107,7 +100,6 @@ void Map::refreshProp(TFrame frame)
 
 bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle) const
 {
-    // TODO 不要重新读文件了，没有必要
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cout << "未能成功打开地图文件" << filename << std::endl;
@@ -250,7 +242,6 @@ Point<TCoor> Map::getNextPos(const Car * car) const
             //更新要到达位置
             double deta = (dis_o2t*dis_o2t - l*l - dis_o2c*dis_o2c)*(dis_o2t*dis_o2t - l*l - dis_o2c*dis_o2c) - 4 * l*l*((RADIUS_CAR + Obstacle[i].radius)*(RADIUS_CAR + Obstacle[i].radius) - dis_o2c*dis_o2c);//公式十分复杂，可能出错？
             if (deta >= 0) {
-                // ???
                 TCoor l = (dis_o2t*dis_o2t - l*l - dis_o2c*dis_o2c - sqrt(deta)) / 2 / l;
                 coor_temp = Point<TCoor>{ car->getCoor().x + l*cos_d(beta),car->getCoor().y + l*sin_d(beta) };
             }

@@ -7,7 +7,7 @@ Game::Game(char* recordFile, char* mapFile) {
 
     map = new Map(this/*, mapFile*/); //TODO: 导入文件名信息
 
-    if (!map)
+    if (!map->isValid())
     {
         std::cerr << "failed to initialize map resources." << std::endl;
         exit(1);
@@ -47,12 +47,13 @@ PLAYER_ID Game::frameRoutine()
     // 0.调用用户函数
     if ((frame + randframe) % 2 == 0)
     {
-        playerFunc0(car[0], map, this);
-        playerFunc1(car[1], map, this);
+        // TODO
+        //playerFunc0(car[0], map, this);
+        //playerFunc1(car[1], map, this);
     }
     else {
-        playerFunc1(car[1], map, this);
-        playerFunc0(car[0], map, this);
+        //playerFunc1(car[1], map, this);
+        //playerFunc0(car[0], map, this);
     }
 
     //1.地图伤害：超时减伤
@@ -101,4 +102,14 @@ PLAYER_ID Game::frameRoutine()
     else
         return UNKNOWN_PLAYER;
     
+}
+
+bool Game::attack(PLAYER_ID id) {
+    // TODO
+    return false;
+}
+
+bool Game::slowdown(PLAYER_ID id) {
+    // TODO
+    return false;
 }

@@ -48,6 +48,9 @@
     <ClInclude Include="include\logic\log_format.h">
       <Filter>头文件\logic</Filter>
     </ClInclude>
+    <ClInclude Include="include\ai.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -65,8 +68,8 @@
     <ClCompile Include="src\logic\prop.cpp">
       <Filter>源文件\logic</Filter>
     </ClCompile>
-    <ClCompile Include="src\player.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="src\controller\player.cpp">
+      <Filter>源文件\controller</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

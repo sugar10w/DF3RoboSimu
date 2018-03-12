@@ -1,5 +1,9 @@
 // Ð¡³µ
-#include "../../include/logic/car.h"
+#include "logic/car.h"
+
+TFrame Car::getTime() const {
+    return game ? game->getTime() : -1; 
+}
 
 void Car::slowedDown()
 {

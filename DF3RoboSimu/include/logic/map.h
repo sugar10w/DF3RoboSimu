@@ -3,10 +3,15 @@
 
 #pragma once
 
-#include"common.h"
-#include"car.h"
-#include"prop.h"
-#include "game.h"
+class Map;
+
+#include "logic/common.h"
+#include "logic/car.h"
+#include "logic/prop.h"
+#include "logic/game.h"
+#include "logic/log_format.h"
+
+static const char* DEFAULT_MAP_FILENAME = "../data/map.txt";
 
 class Map {
 
@@ -15,20 +20,27 @@ private:
     std::vector<Prop> props;
     //障碍物位置 Obstacle 
     std::vector<obs_info> Obstacle; 
+    // 是否有效
+    bool valid;
     //car 其实只需要两个车的位置信息，考虑直接向Game索要
     const Game* game; //TODO
-    const char* filename = "../../data/map.txt";
+    const char* filename = DEFAULT_MAP_FILENAME;
 
 public:
     
+    // 是否有效
+    inline bool isValid() const { return valid; };
+
     // 构造函数，导入const Game*和const char*输入文件名
-    Map(const Game* _game, const char* _filename = "../../data/map.txt") {
+    Map(const Game* _game, const char* _filename = DEFAULT_MAP_FILENAME)
+        : game(_game)
+    {
         filename = _filename;
-        init(_game, _filename);
+        valid = init(_game, _filename);
     }
 
     // 初始化地图
-    bool init(const Game* _game, const char* filename = "../../data/map.txt");
+    bool init(const Game* _game, const char* filename = DEFAULT_MAP_FILENAME);
     
     // 更新道具
     void refreshProp(TFrame frame);
@@ -48,6 +60,8 @@ public:
 
     // 地图当前信息，用于导出
     MapInfo getMapInfo() const;
+
+
 
 };
 

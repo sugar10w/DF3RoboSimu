@@ -15,11 +15,15 @@
 
 #pragma once
 
-#include "map.h"
-#include "car.h"
 #include <iostream>
 #include <fstream>
 #include <ctime>
+
+class Game;
+
+#include "logic/map.h"
+#include "logic/car.h"
+
 
 class Game {
 public:

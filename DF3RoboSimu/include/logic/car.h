@@ -1,12 +1,14 @@
 // 小车
 #pragma once
-#include "common.h"
-#include "game.h"
-#include "map.h"
-#include "log_Format.h"
+
 #include <vector>
 
 class Car;
+
+#include "logic/common.h"
+#include "logic/game.h"
+#include "logic/map.h"
+#include "logic/log_format.h"
 
 //    \brief  小车仿真类  
 //  
@@ -38,7 +40,7 @@ public:
     TFrame getSlowedDownTime() const { return sloweddown_time; }
 
     // TODO: change to real function.
-    TFrame getTime() const { return game ? game->getTime() : -1; }
+    TFrame getTime() const;
 
     // 判断是否在界外
     //    
@@ -133,7 +135,7 @@ public:
     //     @param _coor 初始坐标
     //     @param _car_angle 初始车头朝向
     //     @param _team 所属队伍
-    Car(Game* _game, const Map* _map,
+    Car(Game* _game, Map* _map,
         Point<TCoor> _coor = Point<TCoor>(0, 0), TAngle _car_angle = 0.0, PLAYER_ID _team = UNKNOWN_PLAYER)
         : game(_game), map(_map), coor(_coor), car_angle(_car_angle), team(_team)
     { }
@@ -199,7 +201,7 @@ private:
     PIInstruction buffRecord = PIInstruction_NULL;  // 记录该帧内所使用buff
 
     // TODO
-    const Map* map = NULL;  // 所属地图
+    Map* map = NULL;  // 所属地图
     Game* game = NULL;  //所属游戏控制类
     Point<TCoor> coor = Point<TCoor>(0.0, 0.0);  // 坐标，内部计算均采用double类型，对外呈现均为int整型
     SPD_STATUS spd_status = SPD_NORM;  // 速度状态

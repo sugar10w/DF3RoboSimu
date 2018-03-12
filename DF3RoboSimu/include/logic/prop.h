@@ -1,7 +1,9 @@
 #pragma once
 
-#include"common.h"
-#include"Car.h"
+class Prop;
+
+#include"logic/common.h"
+#include"logic/car.h"
 
 class Prop {
 private:
@@ -28,15 +30,15 @@ public:
     TFrame get_ET() { return exist_time; }
 
     // 判断Car的队伍是否符合本道具
-    bool if_team(const Car& c) const {
+    bool if_team(PLAYER_ID player_id) const {
 
         if (UNKNOWN_PLAYER == owner)
             return true;
         else
-            return (owner == c.getTeam());
+            return (player_id == owner);
     }
     // 判断Car是否捡到本道具
-    bool if_gotcha(const Car& c) const;
+    bool if_gotcha(Point<TCoor> point, PLAYER_ID player_id) const;
 
     //重新生成
     void regenerate() {

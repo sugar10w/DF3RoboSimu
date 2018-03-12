@@ -7,14 +7,14 @@
 #include <iostream>
 
 // 类型定义
-typedef double  TCoor;  // 坐标
+typedef double  TCoor;  // 坐标 单位cm
 typedef float   THP;    // 生命值
 typedef int     TMP;    // 魔法值
 typedef int     TMag;   // 弹药数
-typedef double  TAngle; // 角度
-typedef double  TSpeed; // 速度
+typedef double  TAngle; // 角度 单位deg
+typedef double  TSpeed; // 速度 单位cm/s
 
-typedef float   TTime;  // 时间
+typedef float   TTime;  // 时间 单位s
 typedef int     TFrame; // 帧数
 
 enum PLAYER_ID {P0 = 0, P1 = 1, DRAW = 9, UNKNOWN_PLAYER = 10};  // 玩家ID
@@ -33,15 +33,15 @@ const TCoor RADIUS_CAR = 5;
 enum hit_status {miss,front,side,back};
 //小车参数
 const THP HP_MAX = 100.0;
-const THP MP_MAX = 100;
-const THP MP_GAIN = 2;
-const THP MAG_MAX = 12;
-const THP MAG_CHANGETIME = 2 * FREQ;
+const TMP MP_MAX = 100;
+const TMP MP_GAIN = 2;
+const TMag MAG_MAX = 12;
+const TFrame MAG_CHANGETIME = 2 * FREQ;
 const TAngle VIEW_DEG = 45;
 const TAngle ROTATE_SPD = 90.0 / FREQ;
 
 // 状态参数
-const TSpeed SPD_BASE = 1.0;
+const TSpeed SPD_BASE = 50.0;
 enum SPD_STATUS          { SPD_LOW, SPD_NORM, SPD_HIGH };
 const double SPD_VAL[] = { 0.5,     1.0,      1.5 };
 
@@ -101,10 +101,3 @@ typedef struct
 } prop_info;
 
 //角度制三角函数函数
-
-double cos_d(double theta) { return cos(theta * 180 / 3.14159); }
-double sin_d(double theta) { return sin(theta * 180 / 3.14159); }
-double tan_d(double theta) { return tan(theta * 180 / 3.14159); }
-
-double atan2_d(double y, double x) { return 180 / 3.14159*atan2(y, x); }
-double asin_d(double s) { return 180 / 3.14159*asin(s); }

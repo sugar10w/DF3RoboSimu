@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\ai.h" />
     <ClInclude Include="include\controller\player.h" />
     <ClInclude Include="include\logic\car.h" />
     <ClInclude Include="include\logic\common.h" />
@@ -155,12 +156,12 @@
     <ClInclude Include="include\logic\prop.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\controller\player.cpp" />
     <ClCompile Include="src\logic\car.cpp" />
     <ClCompile Include="src\logic\game.cpp" />
     <ClCompile Include="src\logic\map.cpp" />
     <ClCompile Include="src\logic\prop.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
