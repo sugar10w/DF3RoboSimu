@@ -100,4 +100,3 @@ typedef struct
     Point<TCoor> pos;
 } prop_info;
 
-//角度制三角函数函数

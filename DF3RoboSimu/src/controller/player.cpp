@@ -7,12 +7,6 @@ using std::string;
 using std::cout;
 using std::endl;
 
-Player::Player() {
-    player_ai = NULL;
-    hDLL = NULL;
-    valid = false;
-}
-
 Player::Player(string _file_name)
     : file_name(_file_name)
 {
@@ -23,6 +17,11 @@ Player::Player(string _file_name)
 
 Player::~Player() {
 
+}
+
+bool Player::run(const Info info) {
+    // TODO
+    return false;
 }
 
 bool Player::load() {

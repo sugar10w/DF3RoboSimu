@@ -39,6 +39,8 @@ static std::vector<std::string> split(std::string s, char c) {
     return result;
 }
 
+
+//初始化
 bool Map::init(const Game* _game, const char* filename)
 {
     game = _game;
@@ -52,43 +54,42 @@ bool Map::init(const Game* _game, const char* filename)
         std::string temp;
         std::vector<std::string> paras;
 
-        std::getline(file, temp);
-        paras = split(temp, ',');
-        props.push_back(Prop(HP_PAK, atof(paras[1].c_str()), atof(paras[2].c_str()), P0));
+        std::getline(file, temp ,'#');
+        paras = split(temp, ' ');
+        props.push_back(Prop(HP_PAK, atof(paras[0].c_str()), atof(paras[1].c_str()), P0));
+
+        std::getline(file, temp ,'#');
+        paras = split(temp, ' ');
+        props.push_back(Prop(HP_PAK, atof(paras[0].c_str()), atof(paras[1].c_str()), P1));
+
+        std::getline(file, temp ,'#');
+        paras = split(temp, ' ');
+        props.push_back(Prop(MP_PAK, atof(paras[0].c_str()), atof(paras[1].c_str()), P0));
+
+        std::getline(file, temp ,'#');
+        paras = split(temp, ' ');
+        props.push_back(Prop(MP_PAK, atof(paras[0].c_str()), atof(paras[1].c_str()), P1));
+
+        std::getline(file, temp ,'#');
+        paras = split(temp, ' ');
+        props.push_back(Prop(SPD_BUFF, atof(paras[0].c_str()), atof(paras[1].c_str()), UNKNOWN_PLAYER));
+
+        std::getline(file, temp ,'#');
+        paras = split(temp, ' ');
+        props.push_back(Prop(DEF_BUFF, atof(paras[0].c_str()), atof(paras[1].c_str()), UNKNOWN_PLAYER));
+
+        std::getline(file, temp ,'#');
+        //paras = split(temp, ' ');
+        //car1 = new Car(Point<TCoor>(atof(paras[0].c_str()), atof(paras[1].c_str())), atof(paras[3].c_str()), 1);
+        //此处未初始化Car
 
         std::getline(file, temp);
-        paras = split(temp, ',');
-        props.push_back(Prop(HP_PAK, atof(paras[1].c_str()), atof(paras[2].c_str()), P1));
-
-        std::getline(file, temp);
-        paras = split(temp, ',');
-        props.push_back(Prop(MP_PAK, atof(paras[1].c_str()), atof(paras[2].c_str()), P0));
-
-        std::getline(file, temp);
-        paras = split(temp, ',');
-        props.push_back(Prop(MP_PAK, atof(paras[1].c_str()), atof(paras[2].c_str()), P1));
-
-        std::getline(file, temp);
-        paras = split(temp, ',');
-        props.push_back(Prop(SPD_BUFF, atof(paras[1].c_str()), atof(paras[2].c_str()), UNKNOWN_PLAYER));
-
-        std::getline(file, temp);
-        paras = split(temp, ',');
-        props.push_back(Prop(DEF_BUFF, atof(paras[1].c_str()), atof(paras[2].c_str()), UNKNOWN_PLAYER));
-
-        std::getline(file, temp);
-        paras = split(temp, ',');
-        //car1 = new Car(Point<TCoor>(atof(paras[1].c_str()), atof(paras[2].c_str())), atof(paras[3].c_str()), 1);
-        //toDo: 修改
-
-
-        std::getline(file, temp);
-        paras = split(temp, ',');
-        //car2 = new Car(Point<TCoor>(atof(paras[1].c_str()), atof(paras[2].c_str())), atof(paras[3].c_str()), 2);
+        //paras = split(temp, ' ');
+        //car2 = new Car(Point<TCoor>(atof(paras[0].c_str()), atof(paras[1].c_str())), atof(paras[3].c_str()), 2);
 
         while (std::getline(file, temp))
         {
-            paras = split(temp, ',');
+            paras = split(temp, ' ');
             obs_info t = { Point<TCoor>(atof(paras[0].c_str()), atof(paras[1].c_str())),atof(paras[2].c_str()) };
             Obstacle.push_back(t);
         }
@@ -96,6 +97,7 @@ bool Map::init(const Game* _game, const char* filename)
         }
 }
 
+//道具刷新
 void Map::refreshProp(TFrame frame)
 {
     //五秒后开始生成每种道具
@@ -105,6 +107,7 @@ void Map::refreshProp(TFrame frame)
     }
 }
 
+//返回初始化坐标
 bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle) const
 {
     // TODO 不要重新读文件了，没有必要
@@ -117,28 +120,29 @@ bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle
         std::string temp;
         std::vector<std::string> paras;
         for (int i = 0; i < 6; i++) {
-            std::getline(file, temp);//跳过道具参数
+            std::getline(file, temp,'#');//跳过道具参数
         }
-        std::getline(file, temp);
+        std::getline(file, temp,'#');
         //car1
         if (id == 1) {
-            paras = split(temp, ',');
-            birth_point = Point<TCoor>(atof(paras[1].c_str()), atof(paras[2].c_str()));
-            car_angle = atof(paras[3].c_str());
+            paras = split(temp, ' ');
+            birth_point = Point<TCoor>(atof(paras[0].c_str()), atof(paras[1].c_str()));
+            car_angle = atof(paras[2].c_str());
             return true;
         }
-        std::getline(file, temp);
+        std::getline(file, temp,'#');
         //car2
         if (id == 2) {
-            paras = split(temp, ',');
-            birth_point = Point<TCoor>(atof(paras[1].c_str()), atof(paras[2].c_str()));
-            car_angle = atof(paras[3].c_str());
+            paras = split(temp, ' ');
+            birth_point = Point<TCoor>(atof(paras[0].c_str()), atof(paras[1].c_str()));
+            car_angle = atof(paras[2].c_str());
             return true;
         }
         return false;
     }
 }
 
+//命中判断
 hit_status Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle)
 {
 
@@ -174,6 +178,7 @@ hit_status Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack
     return miss;//未命中  
 }
 
+//视野判断
 void Map::getView(Car * car, std::vector<car_info>& cars) const {
     std::vector<car_info> cars_saw;
     std::vector<prop_info> props_saw;
@@ -236,35 +241,65 @@ void Map::getView(Car * car, std::vector<car_info>& cars) const {
     car->getView(cars_saw, obstacles_saw, props_saw);
 }
 
-Point<TCoor> Map::getNextPos(const Car * car) const
+//小车位置更新
+Point<TCoor> Map::getNextPos(const Car * car, const Car* car_enemy) const
 {
     
     Point<TCoor> coor_temp;
     TCoor l = 0.5*(car->getLeftSpeed() + car->getRightSpeed()) / FREQ;//位移距离
     TAngle beta = getNextAngle(car);
     coor_temp = Point<TCoor>{ car->getCoor().x + l*cos_d(beta),car->getCoor().y + l*sin_d(beta) };//指令想要移动的位置
+    //障碍物判断
     for (int i = 0; i < Obstacle.size(); i++) {
+        //其实只需要判断v*dt+R_c+R_o<dis_02c的障碍物
         TCoor dis_o2t = Obstacle[i].coor.getDistance(coor_temp);//预计位置和障碍物距离
         TCoor dis_o2c = Obstacle[i].coor.getDistance(car->getCoor());//原位置和障碍物距离
         if (dis_o2t< RADIUS_CAR + Obstacle[i].radius) {//如果在到达位置前已经和障碍物相碰
             //更新要到达位置
-            double deta = (dis_o2t*dis_o2t - l*l - dis_o2c*dis_o2c)*(dis_o2t*dis_o2t - l*l - dis_o2c*dis_o2c) - 4 * l*l*((RADIUS_CAR + Obstacle[i].radius)*(RADIUS_CAR + Obstacle[i].radius) - dis_o2c*dis_o2c);//公式十分复杂，可能出错？
-            if (deta >= 0) {
-                // ???
-                TCoor l = (dis_o2t*dis_o2t - l*l - dis_o2c*dis_o2c - sqrt(deta)) / 2 / l;
-                coor_temp = Point<TCoor>{ car->getCoor().x + l*cos_d(beta),car->getCoor().y + l*sin_d(beta) };
+            double a = 0;
+            double b = 1;
+            double c;
+            for (int j = 0; j < 10; j++) {//十次二分法
+                c = (a + b) / 2;
+                coor_temp = Point<TCoor>{ car->getCoor().x + l*c*cos_d(beta),car->getCoor().y + l*c*sin_d(beta) };
+                dis_o2t = Obstacle[i].coor.getDistance(coor_temp);
+                if (dis_o2t < RADIUS_CAR + Obstacle[i].radius)
+                    b = c;
+                else
+                    a = c;
             }
+            l = l*c;//更新前进距离
         }
+    }
+    //与另一辆小车的碰撞判断
+    TCoor dis_c2c = car->getCoor().getDistance(car_enemy->getCoor());
+    TCoor dis_c2t = coor_temp.getDistance(car_enemy->getCoor());
+    if (dis_c2t<2*RADIUS_CAR){
+        double a = 0;
+        double b = 1;
+        double c;
+        for (int j = 0; j < 10; j++) {//十次二分法
+            c = (a + b) / 2;
+            coor_temp = Point<TCoor>{ car->getCoor().x + l*c*cos_d(beta),car->getCoor().y + l*c*sin_d(beta) };
+            dis_c2t = coor_temp.getDistance(car_enemy->getCoor());
+            if (dis_c2t<2 * RADIUS_CAR)
+                b = c;
+            else
+                a = c;
+        }
+        l = l*c;//更新前进距离
     }
     return coor_temp;
 }
 
+//小车角度更新
 TAngle Map::getNextAngle(const Car * car) const
 {
     TAngle deta = (car->getLeftSpeed() - car->getRightSpeed()) / 4 / RADIUS_CAR / FREQ * 180 / 3.14159;
     return (car->getCarAngle()-deta);
 }
 
+//获取地图信息
 MapInfo Map::getMapInfo() const
 {
     MapInfo status{ 0,0,0,0,0,0 };

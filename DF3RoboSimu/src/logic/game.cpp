@@ -5,12 +5,12 @@
 
 Game::Game(char* recordFile, char* mapFile) {
 
-    map = new Map(this/*, mapFile*/); //TODO: 导入文件名信息
+    map = new Map(this, mapFile); //TODO: 导入文件名信息
 
     if (!map->isValid())
     {
         std::cerr << "failed to initialize map resources." << std::endl;
-        exit(1);
+        system("pause");  exit(1);
     }
     
     Point<TCoor> birth_point0, birth_point1;
@@ -24,14 +24,14 @@ Game::Game(char* recordFile, char* mapFile) {
     if (!car[0] || !car[1])
     {
         std::cerr << "failed to initialize resources." << std::endl;
-        exit(1);
+        system("pause");  exit(1);
     }
 
     record_file.open(recordFile, std::ios_base::out | std::ios_base::binary);
     if (!record_file)
     {
         std::cerr << "failed to open file " << recordFile << std::endl;
-        exit(1);
+        system("pause");  exit(1);
     }
 
     srand((unsigned)time(NULL));

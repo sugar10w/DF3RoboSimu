@@ -55,7 +55,7 @@ public:
     void getView(Car* car, std::vector<car_info>& cars) const;
     
     // 获取下一瞬间坐标
-    Point<TCoor> getNextPos(const Car* car) const; 
+    Point<TCoor> getNextPos(const Car* car, const Car* car_enemy) const; 
     TAngle getNextAngle(const Car* car) const;
 
     // 地图当前信息，用于导出

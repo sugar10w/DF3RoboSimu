@@ -48,12 +48,15 @@ public:
     bool attack(PLAYER_ID id);
     // Car的交互动作：减速
     bool slowdown(PLAYER_ID id);
-    
 
-protected:
     // 每帧更新状态
     //     @return    P0/P1 为获胜方，DRAW为平局，UNKNOWN_PLAYER为还未分出胜负
     PLAYER_ID frameRoutine();
+
+    // 获取小车常指针
+    const Car* getCar(PLAYER_ID id) const { return car[id]; }
+    // 获取地图常指针
+    const Map* getMap() const  { return map; }
 
 private:
     TFrame frame = 0;

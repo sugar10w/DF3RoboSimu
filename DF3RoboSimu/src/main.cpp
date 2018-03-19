@@ -10,8 +10,8 @@ using namespace std;
 int main(int argc, char** argv) 
 {
     PLAYER_ID tempid;
-    char* recordFile = "record.data";
-    char* mapFile = "test.map";
+    char* recordFile = "record.log";
+    char* mapFile = "../data/map.txt";;
     Game game(recordFile, mapFile);
 
     while (true)

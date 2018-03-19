@@ -35,7 +35,6 @@ typedef PlayerControl(*TPlayerAi)(const Info info);
 class Player 
 {
 public:
-    Player();
     Player(std::string _file_name);
     ~Player();
 
