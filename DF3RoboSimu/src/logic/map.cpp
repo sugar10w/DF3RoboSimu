@@ -128,8 +128,6 @@ bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle
         //car0
         if (id == P0) {
             paras = split(temp, ' ');
-            cout << temp << endl;
-            cout << "\"" << paras[0] << "\"" << endl << atof(paras[0].c_str()) << endl;
             birth_point = Point<TCoor>(atof(paras[0].c_str()), atof(paras[1].c_str()));
             car_angle = atof(paras[2].c_str());
             return true;

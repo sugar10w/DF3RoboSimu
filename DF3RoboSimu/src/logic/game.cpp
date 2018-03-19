@@ -50,22 +50,48 @@ PLAYER_ID Game::frameRoutine()
     }
 
     PlayerInfo pi0, pi1;
-    PlayerControl pc0, pc1;
-    Info info;
     MapInfo mi;
 
-    // Generate info
-    // info
 
-    // 0.调用用户函数并登记
-    pc0 = player_list[0]->run(info);
-    pc1 = player_list[1]->run(info);
-    car[0]->setLeftSpeed (pc0.left_speed);
-    car[0]->setRightSpeed(pc0.right_speed);
-    //car[0]->rotateAttack (pc0.steer_angle); //TODO ??
-    car[1]->setLeftSpeed (pc1.left_speed);
-    car[1]->setRightSpeed(pc1.right_speed);    
-    //car[1]->rotateAttack (pc1.steer_angle); //TODO ??
+    // 0.调用用户函数并解释
+    for (int id = 0; id < 2; ++id) {
+
+        PlayerControl pc;
+        Info info;
+
+        info.coor = car[id]->getCoor();
+        info.car_angle = car[id]->getCarAngle();
+        info.attack_angle = car[id]->getAttackAngle();
+        info.hp = car[id]->getHP();
+        info.mp = car[id]->getMP();
+        info.mag = car[id]->getMAG();
+        info.spd_status = car[id]->getSpdStatus() == SPD_HIGH;
+        info.frz_status = car[id]->getSpdStatus() == SPD_LOW;
+        info.shd_status = car[id]->getDefStatus() == DEF_ARM;
+        info.can_atk = car[id]->getAtkCdStatus() == BUFF_NORM;
+        info.can_spd = car[id]->getSpeedUpCdStatus() == BUFF_NORM;
+        info.can_frz = car[id]->getSlowDownCdStatus() == BUFF_NORM;
+        info.can_shd = car[id]->getDefCdStatus() == BUFF_NORM;
+
+        pc = player_list[id]->run(info);
+        car[id]->setLeftSpeed(pc.left_speed);
+        car[id]->setRightSpeed(pc.right_speed);
+        car[id]->rotateAttack(pc.steer_angle); 
+
+        switch (pc.action) {
+        case NoAction: break;
+        case Attack1: car[id]->attack(ATK_1MAG); break;
+        case Attack2: car[id]->attack(ATK_2MAG); break;
+        case Attack3: car[id]->attack(ATK_3MAG); break;
+        case ChangeMag: car[id]->changeMag(); break;
+        case FrozenRays: car[id]->emitSlowdown(); break;
+        case SpeedUp: car[id]->speedUp(); break;
+        case Shield: car[id]->protect(); break;
+        default: break;
+        }
+
+    }
+
 
     //1.地图伤害：超时减伤
     for (int i = sizeof(TIMEOUT_TIME) / sizeof(TFrame) - 1; i >= 0; --i)

@@ -30,7 +30,7 @@ public:
     TAngle getAttackAngle() const { return attack_angle; }
     TSpeed getLeftSpeed() const { return lspd; }
     TSpeed getRightSpeed() const { return rspd; }
-    SPD_STATUS getSpdCdStatus() const { return spd_status; }
+    SPD_STATUS getSpdStatus() const { return spd_status; }
     DEF_STATUS getDefStatus() const { return def_status; }
     BUFF_CD_STATUS getAtkCdStatus() const { return atk_cd_status; }
     BUFF_CD_STATUS getSpeedUpCdStatus() const { return spdup_cd_status; }
@@ -113,19 +113,6 @@ public:
     //     @param props 道具信息数组，引用传递
     //     @note    3个vector内容会先被清空。
     void getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props);
-
-
-    // 小车构造函数
-    //    
-    //     设定初始位置、车头方向、所属队伍，该Car类只能由Game类创造实例。
-    //     @param _coor 初始坐标
-    //     @param _car_angle 初始车头朝向
-    //     @param _team 所属队伍
-    Car(Point<TCoor> _coor = Point<TCoor>(0, 0), TAngle _car_angle = 0.0, PLAYER_ID _team = UNKNOWN_PLAYER)
-        :car_angle(_car_angle), team(_team)
-    {
-        coor.x = (TCoor)_coor.x; coor.y = (TCoor)_coor.y;
-    }
 
     // 小车构造函数
     //    

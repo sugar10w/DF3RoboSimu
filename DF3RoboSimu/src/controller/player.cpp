@@ -41,14 +41,14 @@ PlayerControl Player::run(const Info info) {
     
     if (!isValid()) return pc;
 
-#if (!defined _MSC_VER) //|| (defined _DEBUG)
+#if (!defined _MSC_VER) || (defined _DEBUG)
     try {
         pc = player_ai(info);
     }
     catch (exception e) {
         cout << "[ERROR] Player " << file_name << " raised an exception in run()." << endl;
         cout << e.what() << endl;
-        kill(); return false;
+        kill(); return pc;
     }
 #else 
     __try {

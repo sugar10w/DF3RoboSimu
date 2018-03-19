@@ -53,10 +53,19 @@ TSpeed Car::setRightSpeed(TSpeed _rspd)
     return rspd;
 }
 
-TAngle Car::rotateAttack(TAngle _angle)
+TAngle Car::rotateAttack(TAngle _target_angle)
 {
     if (!useRotate)
     {
+        TAngle _angle;
+
+        // 判断合理的转向
+        TAngle theta_plus = fmod(_target_angle + 360 - car_angle, 360);
+        TAngle theta_minus = fmod(car_angle + 360 - _target_angle, 360);
+        if (theta_plus < theta_minus) _angle = theta_plus;
+        else _angle = -theta_minus;
+
+        //旋转之
         if (_angle < -ROTATE_SPD)
             attack_angle -= ROTATE_SPD;
         else if (_angle > ROTATE_SPD)
