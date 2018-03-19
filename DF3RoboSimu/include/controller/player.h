@@ -38,10 +38,11 @@ public:
     Player(std::string _file_name);
     ~Player();
 
-    bool run(const Info info);
+    PlayerControl run(const Info info);
     bool load();
 
-    inline void kill() { valid = false; }
+    void kill();
+
     inline std::string getFileName() const { return file_name; }
     inline bool isValid() const { return valid; }
 

@@ -31,7 +31,7 @@ struct PlayerControl {
 
 // 玩家获取的信息
 struct Info {
-
+    //TODO
 };
 
 #ifdef _MSC_VER

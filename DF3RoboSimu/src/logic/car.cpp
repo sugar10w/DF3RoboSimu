@@ -167,8 +167,11 @@ PlayerInfo Car::frameRoutine()
     statusUpdate();
 
     // 2.移动到下一位置
-    //map->setNextPos(this); 
-    coor = map->getNextPos(this, game->getCar((PLAYER_ID)(1 - team)));
+    setPos(
+        map->getNextPos(this, game->getCar((PLAYER_ID)(1 - team))),
+        map->getNextAngle(this)
+    );
+    
 
     // 3.返回小车回放文件结构体
     return getPlayerInfo();

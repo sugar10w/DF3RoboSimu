@@ -7,6 +7,8 @@ Game::Game(char* recordFile, char* mapFile) {
 
     map = new Map(this, mapFile); //TODO: 导入文件名信息
 
+    valid = false;
+
     if (!map->isValid())
     {
         std::cerr << "failed to initialize map resources." << std::endl;
@@ -36,25 +38,34 @@ Game::Game(char* recordFile, char* mapFile) {
 
     srand((unsigned)time(NULL));
     randframe = rand() % 2;
+
+    valid = true;
 }
 
 
 PLAYER_ID Game::frameRoutine()
 {
+    if (NULL == player_list || !player_list[0]->isValid() || !player_list[1]->isValid()) {
+        std::cout << "[Error] player_list not valid" << std::endl;
+    }
+
     PlayerInfo pi0, pi1;
+    PlayerControl pc0, pc1;
+    Info info;
     MapInfo mi;
 
-    // 0.调用用户函数
-    if ((frame + randframe) % 2 == 0)
-    {
-        // TODO
-        //playerFunc0(car[0], map, this);
-        //playerFunc1(car[1], map, this);
-    }
-    else {
-        //playerFunc1(car[1], map, this);
-        //playerFunc0(car[0], map, this);
-    }
+    // Generate info
+    // info
+
+    // 0.调用用户函数并登记
+    pc0 = player_list[0]->run(info);
+    pc1 = player_list[1]->run(info);
+    car[0]->setLeftSpeed (pc0.left_speed);
+    car[0]->setRightSpeed(pc0.right_speed);
+    //car[0]->rotateAttack (pc0.steer_angle); //TODO ??
+    car[1]->setLeftSpeed (pc1.left_speed);
+    car[1]->setRightSpeed(pc1.right_speed);    
+    //car[1]->rotateAttack (pc1.steer_angle); //TODO ??
 
     //1.地图伤害：超时减伤
     for (int i = sizeof(TIMEOUT_TIME) / sizeof(TFrame) - 1; i >= 0; --i)

@@ -37,8 +37,9 @@ const TMP MP_MAX = 100;
 const TMP MP_GAIN = 2;
 const TMag MAG_MAX = 12;
 const TFrame MAG_CHANGETIME = 2 * FREQ;
-const TAngle VIEW_DEG = 45;
+const TAngle VIEW_DEG = 45.0;
 const TAngle ROTATE_SPD = 90.0 / FREQ;
+const TAngle MAX_ATTACK_ANGLE = 45.0;
 
 // ×´Ì¬²ÎÊý
 const TSpeed SPD_BASE = 50.0;

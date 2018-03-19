@@ -21,6 +21,8 @@
 
 class Game;
 
+#include "controller/player.h"
+
 #include "logic/map.h"
 #include "logic/car.h"
 
@@ -31,8 +33,14 @@ public:
 
     // 构造函数；创造Map和Car
     Game(char* recordFile, char* mapFile);
+    // 设置玩家列表
+    void setPlayerList(Player** _player_list) { player_list = _player_list; }
+
     // 获取当前的帧数
     TFrame getTime() const { return frame; }
+
+    // 加载是否有效
+    bool isValid() const { return valid; }
 
     /* TODO 
     bool 交互动作 {
@@ -59,9 +67,13 @@ public:
     const Map* getMap() const  { return map; }
 
 private:
+    bool valid;
+
+    Player** player_list;
     TFrame frame = 0;
     Map *map = NULL;
     Car *car[2] = { NULL, NULL };
     std::fstream record_file;
+
     int randframe = 0; // 随机数确定第一帧先后顺序
 };
