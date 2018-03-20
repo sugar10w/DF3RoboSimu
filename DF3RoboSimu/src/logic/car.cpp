@@ -55,41 +55,36 @@ TSpeed Car::setRightSpeed(TSpeed _rspd)
 
 TAngle Car::rotateAttack(TAngle _target_attack_angle)
 {
-    if (!useRotate)
-    {
-        TAngle _angle = 0;
+    TAngle _angle = 0;
 
-        _target_attack_angle = fmod(_target_attack_angle + 360, 360);
+    _target_attack_angle = fmod(_target_attack_angle + 360, 360);
 
-        // 判断合理的转向
-        TAngle theta_plus = fmod(_target_attack_angle + 360 - attack_angle, 360);
-        TAngle theta_minus = fmod(attack_angle + 360 - _target_attack_angle, 360);
-        if (theta_plus < theta_minus) _angle = theta_plus;
-        else _angle = -theta_minus;
+    // 判断合理的转向
+    TAngle theta_plus = fmod(_target_attack_angle + 360 - attack_angle, 360);
+    TAngle theta_minus = fmod(attack_angle + 360 - _target_attack_angle, 360);
+    if (theta_plus < theta_minus) _angle = theta_plus;
+    else _angle = -theta_minus;
 
-        //旋转之
-        if (_angle < -ROTATE_SPD)
-            attack_angle -= ROTATE_SPD;
-        else if (_angle > ROTATE_SPD)
-            attack_angle += ROTATE_SPD;
-        else
-            attack_angle += _angle;
+    //旋转之
+    if (_angle < -ROTATE_SPD)
+        attack_angle -= ROTATE_SPD;
+    else if (_angle > ROTATE_SPD)
+        attack_angle += ROTATE_SPD;
+    else
+        attack_angle += _angle;
 
-        attack_angle = fmod(attack_angle + 360, 360.0);
-        useRotate = true;
-    }
+    attack_angle = fmod(attack_angle + 360, 360.0);
     
     return attack_angle;
 }
 
 bool Car::changeMag()
 {
-    if (changemag_cd_status == BUFF_NORM && !useBuff)
+    if (changemag_cd_status == BUFF_NORM)
     {
         mag = 0;
         changemag_cd_status = BUFF_CD;
         changemag_cd_time = getTime();
-        useBuff = true;
         buffRecord = PIInstruction_changemag;
         return true;
     }
@@ -102,13 +97,12 @@ bool Car::changeMag()
 bool Car::emitSlowdown()
 {
     if (slowdown_cd_status == BUFF_NORM && atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM
-        && mp >= BUFF_MP[BUFF_SLOWDOWN] && !useBuff)
+        && mp >= BUFF_MP[BUFF_SLOWDOWN])
     {
         game->slowdown(getTeam()); //TODO
         mp -= BUFF_MP[BUFF_SLOWDOWN];
         atk_cd_status = slowdown_cd_status = BUFF_CD;
         atk_cd_time = slowdown_cd_time = getTime();        
-        useBuff = true;
         buffRecord = PIInstruction_slowdown;
         return true;
     }
@@ -119,12 +113,11 @@ bool Car::emitSlowdown()
 
 bool Car::speedUp()
 {
-    if ((spd_status == SPD_LOW || spd_status == SPD_NORM) && mp >= BUFF_MP[BUFF_SPEEDUP] && !useBuff)
+    if ((spd_status == SPD_LOW || spd_status == SPD_NORM) && mp >= BUFF_MP[BUFF_SPEEDUP])
     {
         mp -= BUFF_MP[BUFF_SPEEDUP];
         spd_status = SPD_HIGH;
         spdup_cd_time = getTime();
-        useBuff = true;
         buffRecord = PIInstruction_speedup;
         return true;
     }
@@ -135,12 +128,11 @@ bool Car::speedUp()
 
 bool Car::protect()
 {
-    if (def_status == DEF_NORM  && mp >= BUFF_MP[BUFF_DEFEND] && !useBuff)
+    if (def_status == DEF_NORM  && mp >= BUFF_MP[BUFF_DEFEND])
     {
         mp -= BUFF_MP[BUFF_DEFEND];
         def_status = DEF_ARM;
         def_cd_time = getTime();
-        useBuff = true;
         buffRecord = PIInstruction_defend;
         return true;
     }
@@ -151,14 +143,12 @@ bool Car::protect()
 
 bool Car::attack(ATK_NUM_MAG num)
 {
-    if (atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM && mag >= num && !useBuff)
+    if (atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM && mag >= num)
     {
         game->attack(getTeam(), num);
-        //map->attack(coor, fmod(car_angle + attack_angle, 360.0), num); //TODO
         mag -= num;
         atk_cd_status = BUFF_CD;
         atk_cd_time = getTime();
-        useBuff = true;
         buffRecord = PIInstruction_attack;
         return true;
     }
@@ -182,7 +172,6 @@ PlayerInfo Car::frameRoutine()
         map->getNextPos(this, game->getCar((PLAYER_ID)(1 - team))),
         map->getNextAngle(this)
     );
-    
 
     // 3.返回小车回放文件结构体
     return getPlayerInfo();
@@ -191,8 +180,6 @@ PlayerInfo Car::frameRoutine()
 void Car::statusUpdate()
 {
     int cur_time = game->getTime();
-    useBuff = false;
-    useRotate = false;
     buffRecord = PIInstruction_NULL;
 
     // defend cd status
@@ -302,4 +289,8 @@ PlayerInfo Car::getPlayerInfo()
 void Car::getAttacked(ATK_NUM_MAG num_mag, ATK_POS atk_pos)
 {
     // TODO 损血，判定存活等
+    double atkratio = DEF_VAL[def_status];
+    setHP(getHP() - atkratio * ATK_POINTS[num_mag][atk_pos]);
+    // 不用判断存活，在game.cpp中frameRoutine最后会判断。
+
 }

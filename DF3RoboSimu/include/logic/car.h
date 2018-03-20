@@ -189,7 +189,6 @@ private:
         spdup_cd_time = 0,  // 加速释放时间
         slowdown_cd_time = 0,  // 延缓射线释放时间
         sloweddown_time = 0;  // 开始被减速时间
-    bool useBuff = false, useRotate = false;  // 保证每帧主动技能和攻击转向只能被调用一次
     PIInstruction buffRecord = PIInstruction_NULL;  // 记录该帧内所使用buff
 
     // TODO

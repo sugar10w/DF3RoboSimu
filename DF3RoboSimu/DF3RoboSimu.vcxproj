@@ -146,7 +146,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\ai.h" />
     <ClInclude Include="include\controller\player.h" />
     <ClInclude Include="include\logic\car.h" />
     <ClInclude Include="include\logic\common.h" />

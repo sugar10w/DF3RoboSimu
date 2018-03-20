@@ -73,6 +73,8 @@ PLAYER_ID Game::frameRoutine()
         info.can_frz = car[id]->getSlowDownCdStatus() == BUFF_NORM;
         info.can_shd = car[id]->getDefCdStatus() == BUFF_NORM;
 
+        // TODO: getview获得视野并填充info结构体
+
         pc = player_list[id]->run(info);
         car[id]->setLeftSpeed(pc.left_speed);
         car[id]->setRightSpeed(pc.right_speed);

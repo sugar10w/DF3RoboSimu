@@ -46,7 +46,7 @@ enum SPD_STATUS          { SPD_LOW, SPD_NORM, SPD_HIGH };
 const double SPD_VAL[] = { 0.5,     1.0,      1.5 };
 
 enum DEF_STATUS          { DEF_NORM, DEF_ARM };
-const double DEF_VAL[] = { 0.5,     1.0 };
+const double DEF_VAL[] = { 1.0,     0.5 };
 
 //PROP道具参数
 enum PROP_TYPE                  { SPD_BUFF,     DEF_BUFF,   HP_PAK,     MP_PAK };
