@@ -49,7 +49,7 @@ public:
     bool getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle& car_angle) const;
 
     // 判断命中
-    hit_status aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle);
+    ATK_POS aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle);
     
     // 刷新小车视野 TODO 改成获得返回值，保留const设定
     void getView(Car* car, std::vector<car_info>& cars) const;

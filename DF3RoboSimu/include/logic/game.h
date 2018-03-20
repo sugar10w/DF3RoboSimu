@@ -53,7 +53,7 @@ public:
     */
 
     // Car的交互动作：攻击
-    bool attack(PLAYER_ID id);
+    bool attack(PLAYER_ID id, ATK_NUM_MAG mag_num);
     // Car的交互动作：减速
     bool slowdown(PLAYER_ID id);
 

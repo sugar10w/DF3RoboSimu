@@ -30,7 +30,7 @@ const THP ATTACK_OOR = 5 / FREQ;  //出界伤害
 const TFrame TIMEOUT_TIME[] = { 1 * FRAME_MINUTE, 2 * FRAME_MINUTE, 3 * FRAME_MINUTE };
 const THP TIMEOUT_HP[] = { 1.0 / FREQ, 2.0 / FREQ, 3.0 / FREQ };
 const TCoor RADIUS_CAR = 5; // 小车半径
-enum hit_status {miss,front,side,back};
+//enum HIT_STATUS {miss,front,side,back};
 //小车参数
 const THP HP_MAX = 100.0;
 const TMP MP_MAX = 100;
@@ -60,8 +60,8 @@ const TMP BUFF_MP[] =          { 40,               60,             60 };
 const TFrame BUFF_CD_TIME[] =  { 10*FREQ,          20*FREQ,        20*FREQ };
 const TFrame BUFF_VALID_TIME = 10 * FREQ;
 //ATK普攻参数
-enum ATK_POS { ATK_FRONT, ATK_SIDE, ATK_BACK, ATK_POS_NUM };
-enum ATK_NUM_MAG { ATK_1MAG, ATK_2MAG, ATK_3MAG, ATK_NUM_MAG_NUM };
+enum ATK_POS { ATK_FRONT, ATK_SIDE, ATK_BACK, ATK_POS_NUM = 3, ATK_MISS = 10 };
+enum ATK_NUM_MAG { ATK_1MAG, ATK_2MAG, ATK_3MAG, ATK_NUM_MAG_NUM = 3 };
 const THP ATK_POINTS[ATK_NUM_MAG_NUM][ATK_POS_NUM] = { {5,6,7},{12,14,16},{21,24,27} };
 const TFrame ATK_CD_TIME = 0.5 * FREQ;
 

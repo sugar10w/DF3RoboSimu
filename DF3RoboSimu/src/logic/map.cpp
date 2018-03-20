@@ -145,7 +145,7 @@ bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle
 }
 
 //命中判断
-hit_status Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle)
+ATK_POS Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle)
 {
 
     TAngle theta = car_angle + attack_angle;//与x正方向夹角
@@ -170,14 +170,14 @@ hit_status Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack
 
             TAngle deta_phi = abs(atan2_d(yy, xx) - target_angle);
             if (deta_phi <= 45)
-                return front;//命中正面
+                return ATK_FRONT;//命中正面
             else if (deta_phi <= 135)
-                return side;//命中侧面
+                return ATK_SIDE;//命中侧面
             else
-                return back;//命中背面
+                return ATK_BACK;//命中背面
         }
     }
-    return miss;//未命中  
+    return ATK_MISS;//未命中  
 }
 
 //视野判断

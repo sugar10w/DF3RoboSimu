@@ -135,6 +135,11 @@ protected:
     //     @return    小车的当前帧信息
     PlayerInfo getPlayerInfo();
 
+    // 收到攻击
+    //
+    //      扣除指定的血量；判断存活
+    void getAttacked(ATK_NUM_MAG mag_num, ATK_POS hit_pos);
+
     // 受到延缓射线攻击
     //    
     //     若原状态为常速则变为减速，若原状态为加速则变为常速。为防止小车运动方向突变，两个轮子速度整体减半，后续选手可自行调整。

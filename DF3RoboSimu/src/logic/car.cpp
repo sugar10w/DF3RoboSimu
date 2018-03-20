@@ -153,7 +153,7 @@ bool Car::attack(ATK_NUM_MAG num)
 {
     if (atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM && mag >= num && !useBuff)
     {
-        game->attack(getTeam());
+        game->attack(getTeam(), num);
         //map->attack(coor, fmod(car_angle + attack_angle, 360.0), num); //TODO
         mag -= num;
         atk_cd_status = BUFF_CD;
@@ -297,4 +297,9 @@ PlayerInfo Car::getPlayerInfo()
         info.instructionCD[PIInstruction_defend - 1] = 0;
 
     return info;
+}
+
+void Car::getAttacked(ATK_NUM_MAG num_mag, ATK_POS atk_pos)
+{
+    // TODO ËðÑª£¬ÅÐ¶¨´æ»îµÈ
 }

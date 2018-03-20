@@ -141,12 +141,47 @@ PLAYER_ID Game::frameRoutine()
     
 }
 
-bool Game::attack(PLAYER_ID id) {
-    // TODO
-    return false;
+bool Game::attack(PLAYER_ID id, ATK_NUM_MAG mag_num) {
+
+    PLAYER_ID emy_id = (PLAYER_ID)(1 - id);
+
+    ATK_POS hit = map->aim_check(
+        getCar(id)->getCoor(),
+        getCar(id)->getCarAngle(),
+        getCar(id)->getAttackAngle(),
+        getCar(emy_id)->getCoor(),
+        getCar(emy_id)->getCarAngle());
+    
+    switch (hit)
+    {
+    case ATK_FRONT: case ATK_SIDE: case ATK_BACK:
+        car[emy_id]->getAttacked(mag_num, hit);
+        break;
+    case ATK_MISS: break;
+    default: break;
+    }
+
+    return ATK_MISS != hit;
 }
 
 bool Game::slowdown(PLAYER_ID id) {
-    // TODO
-    return false;
+    PLAYER_ID emy_id = (PLAYER_ID)(1 - id);
+
+    ATK_POS hit = map->aim_check(
+        getCar(id)->getCoor(),
+        getCar(id)->getCarAngle(),
+        getCar(id)->getAttackAngle(),
+        getCar(emy_id)->getCoor(),
+        getCar(emy_id)->getCarAngle());
+
+    switch (hit)
+    {
+    case ATK_FRONT: case ATK_SIDE: case ATK_BACK:
+        car[emy_id]->slowedDown();
+        break;
+    case ATK_MISS: break;
+    default: break;
+    }
+
+    return ATK_MISS != hit;
 }
