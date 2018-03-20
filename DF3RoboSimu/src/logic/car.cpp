@@ -163,14 +163,19 @@ bool Car::attack(ATK_NUM_MAG num)
         return true;
     }
     else {
-        return false;
+
+        // 弹药不足时，自动换弹
+        if (mag < num) {
+            return changeMag();
+        }
+        else return false;
     }
 }
 
-void Car::getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props)
+/*void Car::getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props)
 {
     map->getView(this, cars); //TODO
-}
+}*/
 
 PlayerInfo Car::frameRoutine()
 {

@@ -181,10 +181,14 @@ ATK_POS Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_an
 }
 
 //视野判断
-void Map::getView(Car * car, vector<car_info>& cars) const {
-    vector<car_info> cars_saw;
-    vector<prop_info> props_saw;
-    vector<obs_info>obstacles_saw;
+void Map::getView(Car * car, vector<car_info>& cars,
+        vector<car_info>& cars_saw,
+        vector<prop_info>& props_saw,
+        vector<obs_info>& obstacles_saw) const 
+{    
+    cars_saw.clear();
+    props_saw.clear();
+    obstacles_saw.clear();
 
     Point<TCoor> car_p = car->getCoor();
     //道具判断
@@ -240,7 +244,7 @@ void Map::getView(Car * car, vector<car_info>& cars) const {
     if (is_visible) {
         cars_saw.push_back(cars[0]);
     }
-    car->getView(cars_saw, obstacles_saw, props_saw);
+    //car->getView(cars_saw, obstacles_saw, props_saw);
 }
 
 //小车位置更新
