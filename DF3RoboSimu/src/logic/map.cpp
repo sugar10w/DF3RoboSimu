@@ -4,9 +4,9 @@
 
 using namespace std;
 
-static double cos_d(double theta) { return cos(theta * 180 / 3.14159); }
-static double sin_d(double theta) { return sin(theta * 180 / 3.14159); }
-static double tan_d(double theta) { return tan(theta * 180 / 3.14159); }
+static double cos_d(double theta) { return cos(theta / 180 * 3.14159); }
+static double sin_d(double theta) { return sin(theta / 180 * 3.14159); }
+static double tan_d(double theta) { return tan(theta / 180 * 3.14159); }
 static double atan2_d(double y, double x) { return 180 / 3.14159*atan2(y, x); }
 static double asin_d(double s) { return 180 / 3.14159*asin(s); }
 
@@ -297,8 +297,8 @@ Point<TCoor> Map::getNextPos(const Car * car, const Car* car_enemy) const
 //小车角度更新
 TAngle Map::getNextAngle(const Car * car) const
 {
-    TAngle deta = (car->getLeftSpeed() - car->getRightSpeed()) / 4 / RADIUS_CAR / FREQ * 180 / 3.14159;
-    return (car->getCarAngle()-deta);
+    TAngle deta = (car->getLeftSpeed() - car->getRightSpeed()) / 2 / RADIUS_CAR / FREQ * 180 / 3.14159;
+    return fmod(car->getCarAngle() - deta + 360, 360);
 }
 
 //获取地图信息

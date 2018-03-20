@@ -29,7 +29,7 @@ const TCoor MAP_HEIGHT = 300;
 const THP ATTACK_OOR = 5 / FREQ;  //出界伤害
 const TFrame TIMEOUT_TIME[] = { 1 * FRAME_MINUTE, 2 * FRAME_MINUTE, 3 * FRAME_MINUTE };
 const THP TIMEOUT_HP[] = { 1.0 / FREQ, 2.0 / FREQ, 3.0 / FREQ };
-const TCoor RADIUS_CAR = 5;
+const TCoor RADIUS_CAR = 5; // 小车半径
 enum hit_status {miss,front,side,back};
 //小车参数
 const THP HP_MAX = 100.0;

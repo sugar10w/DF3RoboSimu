@@ -70,9 +70,9 @@ public:
     //     角度正为逆时针，负为顺时针，0为不动，该角度为相对前进方向的逆时针角度
     //     若_angle<-ROTATE_SPD，则设置为-ROTATE_SPD，若_angle>ROTATE_SPD，
     //     则设置为ROTATE_SPD，否则设置为_angle。
-    //     @param _angle 瞄准逆时针旋转角度
+    //     @param _target_attack_angle 想要转到的角度
     //     @return    旋转后后的瞄准方向相对前进方向的逆时针角度
-    TAngle rotateAttack(TAngle _angle);
+    TAngle rotateAttack(TAngle _target_attack_angle);
 
     // 换弹夹
     //    
