@@ -75,7 +75,7 @@ PLAYER_ID Game::frameRoutine()
 
         // TODO: getview获得视野并填充info结构体
 
-        pc = player_list[id]->run(info);
+        pc = player_list[id]->timedRun(info, 2000);
         car[id]->setLeftSpeed(pc.left_speed);
         car[id]->setRightSpeed(pc.right_speed);
         car[id]->rotateAttack(pc.steer_angle); 
