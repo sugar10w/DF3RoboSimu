@@ -10,6 +10,8 @@ PlayerControl player_ai(const Info info) {
     pc.right_speed = 0;
     pc.steer_angle = -90;
 
+    //while (1);
+
     return pc;
 
 }

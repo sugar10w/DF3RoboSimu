@@ -45,8 +45,9 @@ Game::Game(char* recordFile, char* mapFile) {
 
 PLAYER_ID Game::frameRoutine()
 {
+
     if (NULL == player_list || !player_list[0]->isValid() || !player_list[1]->isValid()) {
-        std::cout << "[Error] player_list not valid" << std::endl;
+        std::cout << "[Warning] some players not valid" << std::endl;
     }
 
     PlayerInfo pi0, pi1;
@@ -75,7 +76,8 @@ PLAYER_ID Game::frameRoutine()
 
         // TODO: getview获得视野并填充info结构体
 
-        pc = player_list[id]->timedRun(info, 2000);
+        pc = player_list[id]->timedRun(info, 1000);
+        //pc = player_list[id]->run(info);
         car[id]->setLeftSpeed(pc.left_speed);
         car[id]->setRightSpeed(pc.right_speed);
         car[id]->rotateAttack(pc.steer_angle); 
@@ -123,17 +125,18 @@ PLAYER_ID Game::frameRoutine()
     frame += 1;
 
     //5.判断是否结束
-    if (car[0]->getHP() <= 0.0 && car[1]->getHP() <= 0.0)
+    if (car[0]->getHP() <= 0.0 && car[1]->getHP() <= 0.0 
+        || (!player_list[0]->isValid() && !player_list[1]->isValid()))
     {
         record_file.close();
         return DRAW;
     }
-    else if (car[0]->getHP() <= 0.0)
+    else if (car[0]->getHP() <= 0.0 || !player_list[0]->isValid())
     {
         record_file.close();
         return P1;
     }
-    else if (car[1]->getHP() <= 0.0)
+    else if (car[1]->getHP() <= 0.0 || !player_list[1]->isValid())
     {
         record_file.close();
         return P0;

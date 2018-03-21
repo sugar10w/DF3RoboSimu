@@ -44,14 +44,18 @@ PlayerControl Player::timedRun(const Info info, int msecond)
 
     while (GetTickCount() - time_a <= msecond)
     {
-        if (flag == 0)
+        if (0 == flag)
         {
             isend = true;
             break;
         }
     }
-    if (!isend)
+
+    if (!isend) {
         pthread_kill(pid, SIGTERM);
+        kill();
+    }
+    
     return pc;
 }
 
