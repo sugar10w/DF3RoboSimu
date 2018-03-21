@@ -183,12 +183,12 @@ private:
     TMP mp = MP_MAX;  // 技能，范围[0, MP_MAX]
     TMag mag = MAG_MAX;  // 弹夹，范围[0, MAG_MAX]
     PLAYER_ID team = UNKNOWN_PLAYER;  // 队伍id
-    TFrame def_cd_time = 0,  // 能量护罩释放时间
-        atk_cd_time = 0,  // 攻击释放时间
-        changemag_cd_time = 0,  // 换弹夹时间
-        spdup_cd_time = 0,  // 加速释放时间
-        slowdown_cd_time = 0,  // 延缓射线释放时间
-        sloweddown_time = 0;  // 开始被减速时间
+    TFrame def_cd_time = -FRAME_MINUTE,  // 能量护罩释放时间
+        atk_cd_time = -FRAME_MINUTE,  // 攻击释放时间
+        changemag_cd_time = -FRAME_MINUTE,  // 换弹夹时间
+        spdup_cd_time = -FRAME_MINUTE,  // 加速释放时间
+        slowdown_cd_time = -FRAME_MINUTE,  // 延缓射线释放时间
+        sloweddown_time = -FRAME_MINUTE;  // 开始被减速时间
     PIInstruction buffRecord = PIInstruction_NULL;  // 记录该帧内所使用buff
 
     // TODO
