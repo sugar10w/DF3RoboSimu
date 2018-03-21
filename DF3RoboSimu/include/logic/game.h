@@ -18,7 +18,7 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
-#include <thread>
+
 
 class Game;
 

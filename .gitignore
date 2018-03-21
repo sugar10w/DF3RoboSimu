@@ -7,7 +7,7 @@
 *.la
 *.lai
 *.so
-*.dll
+TestAi.dll
 *.dylib
 
 # Qt-es

@@ -21,6 +21,41 @@ static unsigned GetTickCount()
 
 #endif
 
+void* runPlayerFunc(void* param)
+{
+    THREAD_PARAM *p = (THREAD_PARAM *)param;
+    *(p->pc) = p->player->player_ai(*(p->info));
+    *(p->flag) = 0;
+    return NULL;
+}
+
+PlayerControl Player::timedRun(const Info info, int msecond)
+{
+    bool isend = false;
+    int flag = 1;
+    PlayerControl pc;
+    THREAD_PARAM temp = {this, &flag, &pc, &info};
+    pthread_t pid;
+
+    if (!isValid()) return pc;
+
+    pthread_create(&pid, NULL, runPlayerFunc, &temp);
+    int time_a = GetTickCount();
+
+    while (GetTickCount() - time_a <= msecond)
+    {
+        if (flag == 0)
+        {
+            isend = true;
+            break;
+        }
+    }
+    if (!isend)
+        pthread_kill(pid, SIGTERM);
+    return pc;
+}
+
+
 Player::Player(string _file_name)
     : file_name(_file_name)
 {

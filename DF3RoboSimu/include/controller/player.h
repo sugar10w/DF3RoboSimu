@@ -5,7 +5,8 @@
 
 #include "ai.h"
 #include <string>
-
+#include "pthread.h"
+#include <csignal>
 
 #ifdef _MSC_VER
 
@@ -39,6 +40,7 @@ public:
     ~Player();
 
     PlayerControl run(const Info info);
+    PlayerControl timedRun(const Info info, int msecond);
     bool load();
 
     void kill();
@@ -46,9 +48,10 @@ public:
     inline std::string getFileName() const { return file_name; }
     inline bool isValid() const { return valid; }
 
-private:
     // 玩家ai函数
     TPlayerAi   player_ai;
+
+private:
     // 玩家动态链接库文件名
     std::string file_name;
     // 是否有效
@@ -57,3 +60,10 @@ private:
     __MY_DLLHANDLE hDLL;
 };
 
+
+typedef struct {
+    Player* player;
+    int* flag;
+    PlayerControl* pc;
+    const Info* info;
+}THREAD_PARAM;
