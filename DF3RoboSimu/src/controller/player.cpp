@@ -80,7 +80,7 @@ PlayerControl Player::run(const Info info) {
     
     if (!isValid()) return pc;
 
-#if (!defined _MSC_VER) || (defined _DEBUG)
+
     try {
         pc = player_ai(info);
     }
@@ -89,15 +89,7 @@ PlayerControl Player::run(const Info info) {
         cout << e.what() << endl;
         kill(); return pc;
     }
-#else 
-    __try {
-        pc = player_ai(info);
-    }
-    __except (EXCEPTION_EXECUTE_HANDLER) {
-        cout << "[ERROR] Player " << file_name << " raised an exception in run()." << endl;
-        kill(); return pc;
-    }
-#endif
+
 
     time_b = GetTickCount();
     if (time_b - time_a > 2000) kill();

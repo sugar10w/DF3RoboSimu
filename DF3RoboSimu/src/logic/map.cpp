@@ -200,8 +200,8 @@ void Map::getView(Car * car, vector<car_info>& cars,
 
         if (deta_phi <= 22.5) {
             for (int j = 0; j < Obstacle.size(); j++) {
-                TCoor distance = abs(cos(theta)*(Obstacle[i].coor.y - prop_p.y) + sin(theta)*(Obstacle[i].coor.x - prop_p.x));
-                if (distance < Obstacle[i].radius) {
+                TCoor distance = abs(cos(theta)*(Obstacle[j].coor.y - prop_p.y) + sin(theta)*(Obstacle[j].coor.x - prop_p.x));
+                if (distance < Obstacle[j].radius) {
                     be_cover = true;
                     break;
                 }

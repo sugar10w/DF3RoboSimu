@@ -41,19 +41,32 @@ PlayerControl bad_ai(const Info info) {
 }
 
 
+Point<TCoor> target_coors[] = {
+    Point<TCoor>(200, 75),
+    Point<TCoor>(200, 150),
+    Point<TCoor>(200, 20),
+    Point<TCoor>(20, 20),
+    Point<TCoor>(200, 20)
+};
+int target_id = 0;
+const int CNT_TARGET = 5;
 PlayerControl rush_ai(const Info info) {
 
     // 跑到 (200,75) 之后转圈
 
     PlayerControl pc;
-    Point<TCoor> target_coor(200, 75);
+    
+    Point<TCoor> target_coor = target_coors[target_id];
 
     // 已经到了
-    if (target_coor.getDistance(info.coor) < 5) {
-        // 转圈
+    if (target_coor.getDistance(info.coor) < 30) {
+        // 下一个点
         pc.action = NoAction;
-        pc.left_speed = 50;
-        pc.right_speed = -50;
+        pc.left_speed = 0;
+        pc.right_speed = 0;
+        pc.steer_angle = 0;
+        ++target_id; target_id %= CNT_TARGET;
+        cout << target_id << endl;
         return pc;
     }
 
@@ -67,6 +80,7 @@ PlayerControl rush_ai(const Info info) {
         pc.action = NoAction;
         pc.left_speed = 50;
         pc.right_speed = 50;
+        pc.steer_angle = 0;
         return pc;
     }
     else {
@@ -74,15 +88,17 @@ PlayerControl rush_ai(const Info info) {
         if (delta_angle > 0) {
             // 左转
             pc.action = NoAction;
-            pc.left_speed = -25;
-            pc.right_speed = 25;
+            pc.left_speed = -20;
+            pc.right_speed = 20;
+            pc.steer_angle = 0;
             return pc;
         }
         else {
             // 右转
             pc.action = NoAction;
-            pc.left_speed = 25;
-            pc.right_speed = -25;
+            pc.left_speed = 20;
+            pc.right_speed = -20;
+            pc.steer_angle = 0;
             return pc;
         }
     }
@@ -94,7 +110,7 @@ PlayerControl rush_ai(const Info info) {
 
 PlayerControl player_ai(const Info info) {
     
-    //return rush_ai(info);
+    return rush_ai(info);
     //return circle_ai(info);
-    return dumb_ai(info);
+    //return dumb_ai(info);
 }
