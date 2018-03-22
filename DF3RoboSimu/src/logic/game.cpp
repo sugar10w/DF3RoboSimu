@@ -111,7 +111,7 @@ PLAYER_ID Game::frameRoutine()
     }
 
 
-    //1.地图伤害：超时减伤
+    //1.地图伤害：超时减伤，界外减伤
     for (int i = sizeof(TIMEOUT_TIME) / sizeof(TFrame) - 1; i >= 0; --i)
     {
         if (frame >= TIMEOUT_TIME[i])
@@ -120,6 +120,12 @@ PLAYER_ID Game::frameRoutine()
             car[1]->setHP(car[1]->getHP() - TIMEOUT_HP[i]);
             break;
         }
+    }
+
+    for (int id = 0; id < 2; ++id)
+    {
+        if (car[id]->isOOR())
+            car[id]->setHP(car[id]->getHP() - ATTACK_OOR);
     }
 
     //2.调用Map刷新道具
