@@ -5,7 +5,7 @@
 
 Game::Game(char* recordFile, char* mapFile) {
 
-    map = new Map(this, mapFile); //TODO: 导入文件名信息
+    map = new Map(this, mapFile); 
 
     valid = false;
 
@@ -35,6 +35,9 @@ Game::Game(char* recordFile, char* mapFile) {
         std::cerr << "failed to open file " << recordFile << std::endl;
         system("pause");  exit(1);
     }
+    int32_t version = 322;
+    record_file.write((char*)&version ,sizeof(int32_t));
+    record_file.flush();
 
     srand((unsigned)time(NULL));
     randframe = rand() % 2;
@@ -115,7 +118,9 @@ PLAYER_ID Game::frameRoutine()
     pi0 = car[0]->frameRoutine();
     pi1 = car[1]->frameRoutine();
 
-    //4.写回放文件
+    //4. TODO 检查道具使用
+
+    //5.写回放文件
     mi = map->getMapInfo();
     record_file.write((char*)&pi0, sizeof(pi0));
     record_file.write((char*)&pi1, sizeof(pi1));

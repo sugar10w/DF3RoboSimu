@@ -159,7 +159,7 @@ bool Car::attack(ATK_NUM_MAG num)
 
 void Car::getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props)
 {
-    map->getView(this, cars); //TODO
+    //map->getView(this, cars); //TODO
 }
 
 PlayerInfo Car::frameRoutine()

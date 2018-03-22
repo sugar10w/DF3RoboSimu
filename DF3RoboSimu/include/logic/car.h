@@ -38,9 +38,7 @@ public:
     BUFF_CD_STATUS getSlowDownCdStatus() const { return slowdown_cd_status; }
     BUFF_CD_STATUS getChangeMagCdStatus() const { return changemag_cd_status; }
     TFrame getSlowedDownTime() const { return sloweddown_time; }
-
-    // TODO: change to real function.
-    TFrame getTime() const;
+    TFrame getTime() const; 
 
     // 判断是否在界外
     //    
@@ -128,6 +126,12 @@ public:
     { }
 
 protected:
+    
+    // TODO
+    // 小车使用道具加速
+    bool propSpeedUP();
+    // 小车使用道具防御
+    bool propProtect();
 
     // 导出回放文件结构体
     //    
@@ -191,7 +195,6 @@ private:
         sloweddown_time = -FRAME_MINUTE;  // 开始被减速时间
     PIInstruction buffRecord = PIInstruction_NULL;  // 记录该帧内所使用buff
 
-    // TODO
     Map* map = NULL;  // 所属地图
     Game* game = NULL;  //所属游戏控制类
     Point<TCoor> coor = Point<TCoor>(0.0, 0.0);  // 坐标，内部计算均采用double类型，对外呈现均为int整型
