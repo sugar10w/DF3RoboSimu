@@ -64,7 +64,8 @@ public:
     // 地图当前信息，用于导出
     MapInfo getMapInfo() const;
 
-
+    // 小车获取哪个道具，未获取返回-1
+    PROP_TYPE getProp(const Car* car);
 
 };
 

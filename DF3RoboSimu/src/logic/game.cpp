@@ -129,7 +129,28 @@ PLAYER_ID Game::frameRoutine()
     pi0 = car[0]->frameRoutine();
     pi1 = car[1]->frameRoutine();
 
-    //4. TODO 检查道具使用
+    //4. TODO 检查道具拾取
+    for (int id = 0; id < 2; ++id)
+    {
+        switch (map->getProp(car[id]))
+        {
+        case SPD_BUFF:
+            car[id]->propSpeedUP();
+            break;
+        case DEF_BUFF:
+            car[id]->propProtect();
+            break;
+        case HP_PAK:
+            car[id]->setHP(car[id]->getHP() + PROP_HP_PAK_POINT);
+            break;
+        case MP_PAK:
+            car[id]->setMP(car[id]->getMP() + PROP_MP_PAK_POINT);
+            break;
+        default:
+            // 未获得道具
+            break;
+        }
+    }
 
     //5.写回放文件
     mi = map->getMapInfo();

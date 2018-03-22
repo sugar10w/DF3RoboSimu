@@ -9,7 +9,8 @@ class Prop {
 private:
     PROP_TYPE tp;
     Point<TCoor> pos;
-    bool flag_available=false;
+    // 为了一个道具能同时被两个小车获取，每次被拾取时设置flag_temp_available=false，每回合后再更新flag_available情况
+    bool flag_available=false, flag_temp_available = true;
     TFrame CD;
     TFrame CD_count = 0;
     TFrame exist_time = 0;
@@ -49,4 +50,11 @@ public:
 
     //每回合处理
     void round_operation();
+
+    //被拾取
+    void get_pickedup() {
+        flag_temp_available = false;
+        CD_count = 0;
+        exist_time = 0;
+    }
 };

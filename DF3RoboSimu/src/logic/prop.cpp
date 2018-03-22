@@ -11,7 +11,7 @@ Prop::Prop(PROP_TYPE t, int _x, int _y, PLAYER_ID _owner)
 
 bool Prop::if_gotcha(Point<TCoor> point, PLAYER_ID player_id) const
 {   
-    return 
+    return is_available() &&
         if_team(player_id) && 
         point.getDistance(pos) < RADIUS_PROP;
 }
@@ -19,6 +19,11 @@ bool Prop::if_gotcha(Point<TCoor> point, PLAYER_ID player_id) const
 
 void Prop::round_operation()
 {
+    if (!flag_temp_available)
+    {
+        flag_available = false;
+        flag_temp_available = true;
+    }
     if (!is_available()) {
         CD_count++;
         if (CD_count > CD)

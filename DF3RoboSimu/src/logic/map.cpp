@@ -298,3 +298,17 @@ MapInfo Map::getMapInfo() const
     status.defendBuff = get_prop_status(props[5]);
     return status;
 }
+
+
+PROP_TYPE Map::getProp(const Car* car)
+{
+    for (int i = 0; i < props.size();++i)
+    {
+        if (props[i].if_gotcha(car->getCoor(), car->getTeam()))
+        {
+            props[i].get_pickedup();
+            return props[i].get_type();
+        }
+    }
+    return (PROP_TYPE)-1;
+}

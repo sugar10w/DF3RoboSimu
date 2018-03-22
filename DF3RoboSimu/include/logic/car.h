@@ -138,11 +138,10 @@ public:
 
 protected:
     
-    // TODO
     // 小车使用道具加速
-    bool propSpeedUP();
+    void propSpeedUP();
     // 小车使用道具防御
-    bool propProtect();
+    void propProtect();
 
     // 导出回放文件结构体
     //    
@@ -199,9 +198,11 @@ private:
     TMag mag = MAG_MAX;  // 弹夹，范围[0, MAG_MAX]
     PLAYER_ID team = UNKNOWN_PLAYER;  // 队伍id
     TFrame def_cd_time = -FRAME_MINUTE,  // 能量护罩释放时间
+        def_valid_time = -FRAME_MINUTE,  // 能量护罩生效时间(考虑到吃到道具和主动释放)
         atk_cd_time = -FRAME_MINUTE,  // 攻击释放时间
         changemag_cd_time = -FRAME_MINUTE,  // 换弹夹时间
         spdup_cd_time = -FRAME_MINUTE,  // 加速释放时间
+        spdup_valid_time = -FRAME_MINUTE,  // 加速生效时间(考虑到吃到道具和主动释放)
         slowdown_cd_time = -FRAME_MINUTE,  // 延缓射线释放时间
         sloweddown_time = -FRAME_MINUTE;  // 开始被减速时间
     PIInstruction buffRecord = PIInstruction_NULL;  // 记录该帧内所使用buff

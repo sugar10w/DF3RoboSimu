@@ -113,11 +113,14 @@ bool Car::emitSlowdown()
 
 bool Car::speedUp()
 {
-    if ((spd_status == SPD_LOW || spd_status == SPD_NORM) && mp >= BUFF_MP[BUFF_SPEEDUP])
+    if ((spd_status == SPD_LOW || spd_status == SPD_NORM) && mp >= BUFF_MP[BUFF_SPEEDUP]
+        && spdup_cd_status == BUFF_NORM)
     {
         mp -= BUFF_MP[BUFF_SPEEDUP];
         spd_status = SPD_HIGH;
         spdup_cd_time = getTime();
+        spdup_valid_time = getTime();
+        spdup_cd_status = BUFF_CD;
         buffRecord = PIInstruction_speedup;
         return true;
     }
@@ -128,11 +131,13 @@ bool Car::speedUp()
 
 bool Car::protect()
 {
-    if (def_status == DEF_NORM  && mp >= BUFF_MP[BUFF_DEFEND])
+    if (def_status == DEF_NORM  && mp >= BUFF_MP[BUFF_DEFEND] && def_cd_status == BUFF_NORM)
     {
         mp -= BUFF_MP[BUFF_DEFEND];
         def_status = DEF_ARM;
         def_cd_time = getTime();
+        def_valid_time = getTime();
+        def_cd_status = BUFF_CD;
         buffRecord = PIInstruction_defend;
         return true;
     }
@@ -187,7 +192,7 @@ void Car::statusUpdate()
         def_cd_status = BUFF_NORM;
     }
     // defend status
-    if (cur_time - def_cd_time == BUFF_VALID_TIME) {
+    if (cur_time - def_valid_time == BUFF_VALID_TIME) {
         def_status = DEF_NORM;
     }
 
@@ -196,7 +201,7 @@ void Car::statusUpdate()
         spdup_cd_status = BUFF_NORM;
     }
     // speed up status, if not slowed after speedup, then back to SPD_NORM
-    if (cur_time - spdup_cd_time == BUFF_VALID_TIME && spd_status == SPD_HIGH) {
+    if (cur_time - spdup_valid_time == BUFF_VALID_TIME && spd_status == SPD_HIGH) {
         spd_status = SPD_NORM;
     }
     // slowed down status, if not speeded up after slowed down, then back to SPD_NORM
@@ -293,4 +298,17 @@ void Car::getAttacked(ATK_NUM_MAG num_mag, ATK_POS atk_pos)
     setHP(getHP() - atkratio * ATK_POINTS[num_mag][atk_pos]);
     // 不用判断存活，在game.cpp中frameRoutine最后会判断。
 
+}
+
+
+void Car::propSpeedUP()
+{
+    spd_status = SPD_HIGH;
+    spdup_valid_time = getTime();
+}
+
+void Car::propProtect()
+{
+    def_status = DEF_ARM;
+    def_valid_time = getTime();
 }
