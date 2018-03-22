@@ -74,8 +74,18 @@ public:
     Point() :x(0), y(0) {}
     Point(T _x, T _y) :x(_x), y(_y) {}
 
-    double getDistance(const Point _p) const {
+    double getDistance(const Point& _p) const {
         return sqrt((double)((x - _p.x)*(x - _p.x) + (y - _p.y)*(y - _p.y)));
+    }
+
+    Point operator+(const Point& _p) const {
+        return Point(x + _p.x, y + _p.y);
+    }
+    Point operator-(const Point& _p) const {
+        return Point(x - _p.x, y - _p.y);
+    }
+    Point operator*(double _d) const {
+        return Point(x*_d, y*_d);
     }
 
 };

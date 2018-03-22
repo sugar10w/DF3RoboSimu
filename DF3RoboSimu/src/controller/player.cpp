@@ -76,8 +76,8 @@ PlayerControl Player::run(const Info info) {
     
     int time_a = GetTickCount();
     int time_b;
-    PlayerControl pc;
-    
+    PlayerControl pc{0, 0, 0, NoAction};
+
     if (!isValid()) return pc;
 
 

@@ -247,6 +247,19 @@ void Map::getView(Car * car, vector<car_info>& cars,
     //car->getView(cars_saw, obstacles_saw, props_saw);
 }
 
+// 圆形挤出模型
+static Point<TCoor> squeezeOut(Point<TCoor> raw, Point<TCoor> obs, TCoor radius) {
+    TCoor d = raw.getDistance(obs);
+    Point<TCoor> delta;
+    double ratio;
+
+    if (d > radius) return raw;
+
+    delta = raw - obs;
+    ratio = radius / d;
+    return obs + delta * ratio;
+
+}
 //小车位置更新
 Point<TCoor> Map::getNextPos(const Car * car, const Car* car_enemy) const
 {
@@ -255,46 +268,14 @@ Point<TCoor> Map::getNextPos(const Car * car, const Car* car_enemy) const
     TCoor l = 0.5*(car->getLeftSpeed() + car->getRightSpeed()) / FREQ;//位移距离
     TAngle beta = getNextAngle(car);
     coor_temp = Point<TCoor>{ car->getCoor().x + l*cos_d(beta), car->getCoor().y + l*sin_d(beta) };//指令想要移动的位置
-    //障碍物判断
+    
+    // 障碍物
     for (int i = 0; i < Obstacle.size(); i++) {
-        //其实只需要判断v*dt+R_c+R_o<dis_02c的障碍物
-        TCoor dis_o2t = Obstacle[i].coor.getDistance(coor_temp);//预计位置和障碍物距离
-        TCoor dis_o2c = Obstacle[i].coor.getDistance(car->getCoor());//原位置和障碍物距离
-        if (dis_o2t < RADIUS_CAR + Obstacle[i].radius) {//如果在到达位置前已经和障碍物相碰
-            //更新要到达位置
-            double a = 0;
-            double b = 1;
-            double c;
-            for (int j = 0; j < 10; j++) {//十次二分法
-                c = (a + b) / 2;
-                coor_temp = Point<TCoor>{ car->getCoor().x + l*c*cos_d(beta),car->getCoor().y + l*c*sin_d(beta) };
-                dis_o2t = Obstacle[i].coor.getDistance(coor_temp);
-                if (dis_o2t < RADIUS_CAR + Obstacle[i].radius)
-                    b = c;
-                else
-                    a = c;
-            }
-            l = l*c;//更新前进距离
-        }
+        coor_temp = squeezeOut(coor_temp, Obstacle[i].coor, Obstacle[i].radius + RADIUS_CAR);
     }
-    //与另一辆小车的碰撞判断
-    TCoor dis_c2c = car->getCoor().getDistance(car_enemy->getCoor());
-    TCoor dis_c2t = coor_temp.getDistance(car_enemy->getCoor());
-    if (dis_c2t<2*RADIUS_CAR){
-        double a = 0;
-        double b = 1;
-        double c;
-        for (int j = 0; j < 10; j++) {//十次二分法
-            c = (a + b) / 2;
-            coor_temp = Point<TCoor>{ car->getCoor().x + l*c*cos_d(beta), car->getCoor().y + l*c*sin_d(beta) };
-            dis_c2t = coor_temp.getDistance(car_enemy->getCoor());
-            if (dis_c2t < 2 * RADIUS_CAR)
-                b = c;
-            else
-                a = c;
-        }
-        l = l*c;//更新前进距离
-    }
+    // 对方小车
+    coor_temp = squeezeOut(coor_temp, car_enemy->getCoor(), 2 * RADIUS_CAR);
+
     return coor_temp;
 }
 
