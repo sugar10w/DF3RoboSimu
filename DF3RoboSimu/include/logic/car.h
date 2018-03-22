@@ -38,7 +38,18 @@ public:
     BUFF_CD_STATUS getSlowDownCdStatus() const { return slowdown_cd_status; }
     BUFF_CD_STATUS getChangeMagCdStatus() const { return changemag_cd_status; }
     TFrame getSlowedDownTime() const { return sloweddown_time; }
+
     TFrame getTime() const; 
+
+    car_info getCarInfo() const {
+        car_info ci;
+        ci.coor = coor;
+        ci.hp = hp;
+        ci.tank_angle = car_angle;
+        ci.attack_angle = attack_angle;
+        ci.team = team;
+        return ci;
+    }
 
     // 判断是否在界外
     //    
@@ -110,7 +121,7 @@ public:
     //     @param obs 障碍物信息数组，引用传递
     //     @param props 道具信息数组，引用传递
     //     @note    3个vector内容会先被清空。
-    void getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props);
+    //void getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props);
 
     // 小车构造函数
     //    

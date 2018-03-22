@@ -52,7 +52,10 @@ public:
     ATK_POS aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle);
     
     // 刷新小车视野 TODO 改成获得返回值，保留const设定
-    void getView(Car* car, std::vector<car_info>& cars) const;
+    void getView(Car* car, std::vector<car_info>& cars,
+        std::vector<car_info>& cars_saw,
+        std::vector<prop_info>& props_saw,
+        std::vector<obs_info>& obstacles_saw) const;
     
     // 获取下一瞬间坐标
     Point<TCoor> getNextPos(const Car* car, const Car* car_enemy) const; 

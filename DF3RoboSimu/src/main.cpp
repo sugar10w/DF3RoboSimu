@@ -49,8 +49,8 @@ int main(int argc, char** argv)
         /*cout << "t=" << game.getTime() << endl;
         cout << "x=" << game.getCar(P0)->getCoor().x << "\t\ty=" << game.getCar(P0)->getCoor().y << endl;
         cout << "a=" << game.getCar(P0)->getCarAngle() << "\t\tatk_a=" << game.getCar(P0)->getAttackAngle() << endl;
-        //system("pause"); 
-        */
+        cout << "mag=" << game.getCar(P0)->getMAG() << endl;
+        system("pause"); */
 
         tempid = game.frameRoutine();
         if (tempid == P0)

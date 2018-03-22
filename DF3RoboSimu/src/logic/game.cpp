@@ -2,6 +2,7 @@
 
 #include "logic/game.h"
 
+using namespace std;
 
 Game::Game(char* recordFile, char* mapFile) {
 
@@ -55,8 +56,12 @@ PLAYER_ID Game::frameRoutine()
 
     PlayerInfo pi0, pi1;
     MapInfo mi;
-
-
+    
+    vector<car_info> cars;
+    for (int id = 0; id < 2; ++id) {
+        cars.push_back(car[id]->getCarInfo());
+    }
+    
     // 0.调用用户函数并解释
     for (int id = 0; id < 2; ++id) {
 
@@ -76,6 +81,12 @@ PLAYER_ID Game::frameRoutine()
         info.can_spd = car[id]->getSpeedUpCdStatus() == BUFF_NORM;
         info.can_frz = car[id]->getSlowDownCdStatus() == BUFF_NORM;
         info.can_shd = car[id]->getDefCdStatus() == BUFF_NORM;
+        map->getView(
+            car[id],
+            cars,
+            info.cars,
+            info.props,
+            info.obs);
 
         // TODO: getview获得视野并填充info结构体
 

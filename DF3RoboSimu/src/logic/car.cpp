@@ -99,7 +99,7 @@ bool Car::emitSlowdown()
     if (slowdown_cd_status == BUFF_NORM && atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM
         && mp >= BUFF_MP[BUFF_SLOWDOWN])
     {
-        game->slowdown(getTeam()); //TODO
+        game->slowdown(getTeam()); 
         mp -= BUFF_MP[BUFF_SLOWDOWN];
         atk_cd_status = slowdown_cd_status = BUFF_CD;
         atk_cd_time = slowdown_cd_time = getTime();        
@@ -157,10 +157,10 @@ bool Car::attack(ATK_NUM_MAG num)
     }
 }
 
-void Car::getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props)
+/*void Car::getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props)
 {
     //map->getView(this, cars); //TODO
-}
+}*/
 
 PlayerInfo Car::frameRoutine()
 {
