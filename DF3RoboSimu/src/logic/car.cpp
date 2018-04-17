@@ -158,6 +158,9 @@ bool Car::attack(ATK_NUM_MAG num)
         return true;
     }
     else {
+        if (mag < num) {
+            return changeMag();
+        }
         return false;
     }
 }
