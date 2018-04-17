@@ -149,7 +149,7 @@ ATK_POS Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_an
 {
 
     TAngle theta = car_angle + attack_angle;//与x正方向夹角
-    //l: cos(theta)*(y-ya)+sin(theta)*（x-xa)=0
+    //l: cos_d(theta)*(y-ya)+sin_d(theta)*(x-xa)=0
     TCoor distance = abs(cos_d(theta)*(P_target.y - P_attack.y) + sin_d(theta)*(P_target.x - P_attack.x));
     if (distance < RADIUS_CAR) {
         int len = Obstacle.size();
@@ -200,7 +200,7 @@ void Map::getView(Car * car, vector<car_info>& cars,
 
         if (deta_phi <= 22.5) {
             for (int j = 0; j < Obstacle.size(); j++) {
-                TCoor distance = abs(cos(theta)*(Obstacle[j].coor.y - prop_p.y) + sin(theta)*(Obstacle[j].coor.x - prop_p.x));
+                TCoor distance = abs(cos_d(theta)*(Obstacle[j].coor.y - prop_p.y) + sin_d(theta)*(Obstacle[j].coor.x - prop_p.x));
                 if (distance < Obstacle[j].radius) {
                     be_cover = true;
                     break;
@@ -217,15 +217,16 @@ void Map::getView(Car * car, vector<car_info>& cars,
         Point<TCoor> obs_p = Obstacle[i].coor;
         TAngle theta = atan2_d(-car_p.y + obs_p.y, -car_p.x + obs_p.x);
         TAngle deta_phi = abs(theta - car->getAttackAngle());
-        if (deta_phi <= 22.5 + abs(asin(Obstacle[i].radius / obs_p.getDistance(car_p))))
+        if (deta_phi <= 22.5 + abs(asin_d(Obstacle[i].radius / obs_p.getDistance(car_p))))
             obstacles_saw.push_back(Obstacle[i]);
     }
     //敌方小车判断
-    Point<TCoor> enemy_p = cars[0].coor;
+    int id = (int)car->getTeam();
+    Point<TCoor> enemy_p = cars[1 - id].coor;
     TAngle theta = atan2_d(enemy_p.y - car_p.y, enemy_p.x - car_p.x);
     TAngle deta_phi = abs(theta - car->getAttackAngle());
     bool is_visible = true;
-    if (deta_phi <= 22.5 + abs(asin(RADIUS_CAR / enemy_p.getDistance(car_p)))) {
+    if (deta_phi <= 22.5 + abs(asin_d(RADIUS_CAR / enemy_p.getDistance(car_p)))) {
         for (int i = 0; i < obstacles_saw.size(); i++) {
             Point<TCoor> obs_p = obstacles_saw[i].coor;
             TCoor dis_c2t = car_p.getDistance(enemy_p);//观察者到目标
@@ -242,7 +243,7 @@ void Map::getView(Car * car, vector<car_info>& cars,
         is_visible = false;
     }
     if (is_visible) {
-        cars_saw.push_back(cars[0]);
+        cars_saw.push_back(cars[1 - id]);
     }
     //car->getView(cars_saw, obstacles_saw, props_saw);
 }
