@@ -51,7 +51,7 @@ const double DEF_VAL[] = { 1.0,     0.5 };
 //PROP道具参数
 enum PROP_TYPE                  { SPD_BUFF,     DEF_BUFF,   HP_PAK,     MP_PAK };
 const TFrame PROP_CD_TIME[] =   { 20*FREQ,      20*FREQ,    30*FREQ,    30*FREQ};
-const TCoor RADIUS_PROP = 20;
+const TCoor RADIUS_PROP = 5;
 const TFrame PROP_START_TIME = 5 * FREQ;
 const THP PROP_HP_PAK_POINT = 40;
 const TMP PROP_MP_PAK_POINT = 40;
