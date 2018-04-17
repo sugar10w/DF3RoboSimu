@@ -9,6 +9,11 @@ static double sin_d(double theta) { return sin(theta / 180 * 3.14159); }
 static double tan_d(double theta) { return tan(theta / 180 * 3.14159); }
 static double atan2_d(double y, double x) { return 180 / 3.14159*atan2(y, x); }
 static double asin_d(double s) { return 180 / 3.14159*asin(s); }
+static double minus_angle_d(double t1, double t2) {
+    double u = fmod(t1 - t2 + 360, 360);
+    if (u > 180) u -= 360;
+    return u;
+}
 
 // 获取道具状态
 static TFrame get_prop_status(Prop p) {
@@ -168,7 +173,7 @@ ATK_POS Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_an
             TCoor xx = P_attack.x + cos_d(theta)*s;
             TCoor yy = P_attack.y + sin_d(theta)*s;
 
-            TAngle deta_phi = abs(atan2_d(yy, xx) - target_angle);
+            TAngle deta_phi = abs(minus_angle_d(atan2_d(yy,xx), target_angle));
             if (deta_phi <= 45)
                 return ATK_FRONT;//命中正面
             else if (deta_phi <= 135)
@@ -196,7 +201,7 @@ void Map::getView(Car * car, vector<car_info>& cars,
         Point<TCoor> prop_p = props[i].get_pos();
         bool be_cover = false;
         TAngle theta = atan2_d(car_p.y - prop_p.y, car_p.x - prop_p.x);//车与道具所在直线的角度
-        TAngle deta_phi = abs(theta - car->getAttackAngle());//与视野中线的夹角
+        TAngle deta_phi = abs(minus_angle_d(theta, car->getAttackAngle()));//与视野中线的夹角
 
         if (deta_phi <= 22.5) {
             for (int j = 0; j < Obstacle.size(); j++) {
@@ -216,7 +221,7 @@ void Map::getView(Car * car, vector<car_info>& cars,
     for (int i = 0; i < Obstacle.size(); i++) {
         Point<TCoor> obs_p = Obstacle[i].coor;
         TAngle theta = atan2_d(-car_p.y + obs_p.y, -car_p.x + obs_p.x);
-        TAngle deta_phi = abs(theta - car->getAttackAngle());
+        TAngle deta_phi = abs(minus_angle_d(theta, car->getAttackAngle()));
         if (deta_phi <= 22.5 + abs(asin_d(Obstacle[i].radius / obs_p.getDistance(car_p))))
             obstacles_saw.push_back(Obstacle[i]);
     }
@@ -224,7 +229,7 @@ void Map::getView(Car * car, vector<car_info>& cars,
     int id = (int)car->getTeam();
     Point<TCoor> enemy_p = cars[1 - id].coor;
     TAngle theta = atan2_d(enemy_p.y - car_p.y, enemy_p.x - car_p.x);
-    TAngle deta_phi = abs(theta - car->getAttackAngle());
+    TAngle deta_phi = abs(minus_angle_d(theta, car->getAttackAngle()));
     bool is_visible = true;
     if (deta_phi <= 22.5 + abs(asin_d(RADIUS_CAR / enemy_p.getDistance(car_p)))) {
         for (int i = 0; i < obstacles_saw.size(); i++) {
