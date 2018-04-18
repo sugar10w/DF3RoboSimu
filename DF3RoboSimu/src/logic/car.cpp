@@ -227,6 +227,11 @@ void Car::statusUpdate()
         mag = MAG_MAX;
         changemag_cd_status = BUFF_NORM;
     }
+
+    // auto add MP
+    mp += MP_GAIN;
+    if (mp < 0) mp = 0;
+    if (mp > MP_MAX) mp = MP_MAX;
 }
 
 void Car::setMP(TMP _mp)

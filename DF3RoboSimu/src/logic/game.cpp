@@ -68,6 +68,7 @@ PLAYER_ID Game::frameRoutine()
         PlayerControl pc;
         Info info;
 
+        info.id = id;
         info.coor = car[id]->getCoor();
         info.car_angle = car[id]->getCarAngle();
         info.attack_angle = car[id]->getAttackAngle();

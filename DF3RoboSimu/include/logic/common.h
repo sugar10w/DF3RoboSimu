@@ -9,7 +9,7 @@
 // 类型定义
 typedef double  TCoor;  // 坐标 单位cm
 typedef float   THP;    // 生命值
-typedef int     TMP;    // 魔法值
+typedef double  TMP;    // 魔法值
 typedef int     TMag;   // 弹药数
 typedef double  TAngle; // 角度 单位deg
 typedef double  TSpeed; // 速度 单位cm/s
@@ -34,7 +34,7 @@ const TCoor RADIUS_CAR = 5; // 小车半径
 //小车参数
 const THP HP_MAX = 100.0;
 const TMP MP_MAX = 100;
-const TMP MP_GAIN = 2;
+const TMP MP_GAIN = 2.0 / FREQ;
 const TMag MAG_MAX = 12;
 const TFrame MAG_CHANGETIME = 2 * FREQ;
 const TAngle VIEW_DEG = 45.0;

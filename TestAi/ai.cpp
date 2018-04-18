@@ -31,12 +31,18 @@ PlayerControl bad_ai(const Info info) {
 }
 
 
-Point<TCoor> target_coors[] = {
+Point<TCoor> target_coors[2][4] = {
+    {
     Point<TCoor>(200, 75),
     Point<TCoor>(200, 225),
     Point<TCoor>(20, 20),
     Point<TCoor>(20, 280)
-};
+}, {
+    Point<TCoor>(200, 75),
+    Point<TCoor>(200, 225),
+    Point<TCoor>(380, 280),
+    Point<TCoor>(380, 20)
+    } };
 int target_id = 0;
 const int CNT_TARGET = 4;
 
@@ -75,7 +81,7 @@ PlayerControl rush_target(const Info info, Point<TCoor> target_coor) {
 PlayerControl rush_ai(const Info info) {
 
 
-    Point<TCoor> target_coor = target_coors[target_id];
+    Point<TCoor> target_coor = target_coors[info.id][target_id];
     if (target_coor.getDistance(info.coor) < RADIUS_PROP) {
         // 下一个点
         ++target_id; target_id %= CNT_TARGET;
@@ -99,7 +105,7 @@ PlayerControl attack_ai(const Info info) {
     }
     else
     {
-        target_coor = target_coors[target_id];
+        target_coor = target_coors[info.id][target_id];
         if (target_coor.getDistance(info.coor) < RADIUS_PROP) {
             // 下一个点
             ++target_id; target_id %= CNT_TARGET;

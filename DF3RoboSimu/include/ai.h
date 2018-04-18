@@ -11,6 +11,9 @@ struct Info {
 
     // 己方全套信息
 
+    // ID
+    int id;
+
     // 坐标
     Point<double> coor;
     // 车身朝向（deg）
