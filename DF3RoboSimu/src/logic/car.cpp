@@ -148,17 +148,17 @@ bool Car::protect()
 
 bool Car::attack(ATK_NUM_MAG num)
 {
-    if (atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM && mag >= num)
+    if (atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM && mag >= ATK_MAG_DEMAND[num])
     {
         game->attack(getTeam(), num);
-        mag -= num;
+        mag -= ATK_MAG_DEMAND[num];
         atk_cd_status = BUFF_CD;
         atk_cd_time = getTime();
         buffRecord = PIInstruction_attack;
         return true;
     }
     else {
-        if (mag < num) {
+        if (mag < ATK_MAG_DEMAND[num]) {
             return changeMag();
         }
         return false;

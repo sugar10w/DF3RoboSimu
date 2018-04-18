@@ -63,9 +63,11 @@ const TFrame BUFF_CD_TIME[] =  { 10*FREQ,          20*FREQ,        20*FREQ };
 const TFrame BUFF_VALID_TIME = 10 * FREQ;
 //ATK普攻参数
 enum ATK_POS { ATK_FRONT, ATK_SIDE, ATK_BACK, ATK_MISS = 10 };
-enum ATK_NUM_MAG { ATK_1MAG = 1, ATK_2MAG = 2, ATK_3MAG = 3};
+enum ATK_NUM_MAG { ATK_1MAG, ATK_2MAG, ATK_3MAG};
+const TMag ATK_MAG_DEMAND[3] = { 1, 2, 3 };
 const THP ATK_POINTS[3][3] = { {5,6,7},{12,14,16},{21,24,27} };
 const TFrame ATK_CD_TIME = 0.5 * FREQ;
+const TCoor ATK_MAX_LEN = 150;
 
 
 //地图坐标

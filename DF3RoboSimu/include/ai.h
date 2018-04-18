@@ -11,8 +11,10 @@ struct Info {
 
     // 己方全套信息
 
-    // ID
+    // 选手id，0或1
     int id;
+    // 当前时间（回合数）
+    int round;
 
     // 坐标
     Point<double> coor;
@@ -28,7 +30,7 @@ struct Info {
     // 弹药数量
     int mag;
     
-    // 己方是否处在 加速 / 减速 / 防御状态 
+    // 己方是否处在 加速spd / 减速frz / 防御shd 状态 
     bool spd_status, frz_status, shd_status;
     // 各项技能是否已经完成冷却，可以使用
     bool can_atk, can_spd, can_frz, can_shd;
@@ -59,9 +61,9 @@ enum PlayerAction {
 // 玩家控制
 struct PlayerControl {
     // 左右轮转速
-    float left_speed, right_speed;
+    double left_speed, right_speed;
     // 舵机目标角度
-    float steer_angle;
+    double steer_angle;
     // 主动技能
     PlayerAction action;
 };

@@ -92,7 +92,7 @@ PlayerControl Player::run(const Info info) {
 
 
     time_b = GetTickCount();
-    if (time_b - time_a > 2000) kill();
+    //if (time_b - time_a > 2000) kill();
 
     return pc;
 }

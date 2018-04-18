@@ -28,6 +28,7 @@ public:
     PLAYER_ID getTeam() const { return team; }
     TAngle getCarAngle() const { return car_angle; }
     TAngle getAttackAngle() const { return attack_angle; }
+    TAngle getViewAngle() const { return fmod(car_angle + attack_angle + 360, 360); }
     TSpeed getLeftSpeed() const { return lspd; }
     TSpeed getRightSpeed() const { return rspd; }
     SPD_STATUS getSpdStatus() const { return spd_status; }

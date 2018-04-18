@@ -97,6 +97,7 @@ bool Map::init(const Game* _game, const char* filename)
         while (getline(file, temp))
         {
             paras = split(temp, ' ');
+            if (paras.size() < 3) continue;
             obs_info t = { Point<TCoor>(atof(paras[0].c_str()), atof(paras[1].c_str())),atof(paras[2].c_str()) };
             Obstacle.push_back(t);
         }
@@ -152,37 +153,39 @@ bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle
 //命中判断
 ATK_POS Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_angle, Point<TCoor> P_target, TAngle target_angle)
 {
+    bool hit = true;
 
-    TAngle theta = car_angle + attack_angle;//与x正方向夹角
-    //l: cos_d(theta)*(y-ya)+sin_d(theta)*(x-xa)=0
-    TCoor distance = abs(cos_d(theta)*(P_target.y - P_attack.y) + sin_d(theta)*(P_target.x - P_attack.x));
-    if (distance < RADIUS_CAR) {
-        int len = Obstacle.size();
-        bool is_obstacle = false;
-        for (int i = 0; i < len; i++) {
-            Point<TCoor> p = Obstacle[i].coor;
-            if (abs(cos_d(theta)*(p.y - P_attack.y) + sin_d(theta)*(p.x - P_attack.x)) < Obstacle[i].radius) {
-                is_obstacle = true;
-                break;
-            }
-        }
-        if (!is_obstacle) {
-            TCoor l = P_attack.getDistance(P_target);//攻击者和目标圆心距离
-            TCoor s = sqrt(l*l - distance*distance) - sqrt(RADIUS_CAR - distance);
-            //命中点
-            TCoor xx = P_attack.x + cos_d(theta)*s;
-            TCoor yy = P_attack.y + sin_d(theta)*s;
+    TAngle center_c = fmod(car_angle + attack_angle + 360, 360);
 
-            TAngle deta_phi = abs(minus_angle_d(atan2_d(yy,xx), target_angle));
-            if (deta_phi <= 45)
-                return ATK_FRONT;//命中正面
-            else if (deta_phi <= 135)
-                return ATK_SIDE;//命中侧面
-            else
-                return ATK_BACK;//命中背面
-        }
+    TCoor distance_t = P_attack.getDistance(P_target);
+    TAngle center_t = atan2_d(P_target.y - P_attack.y, P_target.x - P_attack.x);
+    TAngle width_t = abs(asin_d(RADIUS_CAR / distance_t));
+
+    if (distance_t > ATK_MAX_LEN) return ATK_MISS;
+    if (abs(minus_angle_d(center_c, center_t)) > width_t) return ATK_MISS;
+
+    for (int i = 0; i < Obstacle.size(); ++i) {
+        TCoor distance_o = Obstacle[i].coor.getDistance(P_attack);
+        if (distance_o > distance_t) continue;
+
+        TAngle center_o = atan2_d(Obstacle[i].coor.y - P_attack.y, Obstacle[i].coor.x - P_attack.x);
+        TAngle width_o = abs(asin_d(Obstacle[i].radius / distance_o));
+
+        hit = hit && abs(minus_angle_d(center_c, center_o)) > width_o;
+        if (!hit) break;
+    }
+
+    if (hit) {
+        TAngle deta_phi = abs(minus_angle_d(center_c, target_angle));
+        if (deta_phi <= 45)
+            return ATK_BACK;//命中背面
+        else if (deta_phi <= 135)
+            return ATK_SIDE;//命中侧面
+        else
+            return ATK_FRONT;//命中正面
     }
     return ATK_MISS;//未命中  
+
 }
 
 //视野判断
@@ -195,62 +198,57 @@ void Map::getView(Car * car, vector<car_info>& cars,
     props_saw.clear();
     obstacles_saw.clear();
 
-    Point<TCoor> car_p = car->getCoor();
-    //道具判断
-    for (int i = 0; i < props.size(); i++) {
-        Point<TCoor> prop_p = props[i].get_pos();
-        bool be_cover = false;
-        TAngle theta = atan2_d(car_p.y - prop_p.y, car_p.x - prop_p.x);//车与道具所在直线的角度
-        TAngle deta_phi = abs(minus_angle_d(theta, car->getAttackAngle()));//与视野中线的夹角
+    int id = (int)car->getTeam();
+    Point<TCoor> car_p = cars[id].coor;
+    Point<TCoor> enemy_p = cars[1 - id].coor;
 
-        if (deta_phi <= 22.5) {
-            for (int j = 0; j < Obstacle.size(); j++) {
-                TCoor distance = abs(cos_d(theta)*(Obstacle[j].coor.y - prop_p.y) + sin_d(theta)*(Obstacle[j].coor.x - prop_p.x));
-                if (distance < Obstacle[j].radius) {
-                    be_cover = true;
-                    break;
-                }
-            }
-            if (!be_cover) {
-                prop_info prop_i = { props[i].get_type(), Point<TCoor>(TCoor(props[i].get_pos().x),TCoor(props[i].get_pos().y)) };
-                props_saw.push_back(prop_i);
-            }
+    //道具
+    for (int i = 0; i < props.size(); i++) {
+        if (props[i].is_available() && props[i].if_team(car->getTeam())) {
+            prop_info prop_i = { props[i].get_type(), Point<TCoor>(TCoor(props[i].get_pos().x),TCoor(props[i].get_pos().y)) };
+            props_saw.push_back(prop_i);
         }
     }
-    //障碍物判断
+    //障碍物
     for (int i = 0; i < Obstacle.size(); i++) {
-        Point<TCoor> obs_p = Obstacle[i].coor;
-        TAngle theta = atan2_d(-car_p.y + obs_p.y, -car_p.x + obs_p.x);
-        TAngle deta_phi = abs(minus_angle_d(theta, car->getAttackAngle()));
-        if (deta_phi <= 22.5 + abs(asin_d(Obstacle[i].radius / obs_p.getDistance(car_p))))
-            obstacles_saw.push_back(Obstacle[i]);
+        obstacles_saw.push_back(Obstacle[i]);
     }
     //敌方小车判断
-    int id = (int)car->getTeam();
-    Point<TCoor> enemy_p = cars[1 - id].coor;
-    TAngle theta = atan2_d(enemy_p.y - car_p.y, enemy_p.x - car_p.x);
-    TAngle deta_phi = abs(minus_angle_d(theta, car->getAttackAngle()));
-    bool is_visible = true;
-    if (deta_phi <= 22.5 + abs(asin_d(RADIUS_CAR / enemy_p.getDistance(car_p)))) {
-        for (int i = 0; i < obstacles_saw.size(); i++) {
-            Point<TCoor> obs_p = obstacles_saw[i].coor;
-            TCoor dis_c2t = car_p.getDistance(enemy_p);//观察者到目标
-            TCoor dis_c2o = car_p.getDistance(obs_p);//观察者到障碍
-            TCoor l = abs(cos_d(theta)*(obs_p.y - car_p.y) + sin_d(theta)*(obs_p.x - car_p.x));//障碍到观察者-目标连线的距离
-            TCoor h = abs((enemy_p.x - car_p.x)*(obs_p.x - car_p.x) + (enemy_p.y - car_p.y)*(obs_p.y - car_p.y)) / dis_c2o;//沿连线距离
-            if (h*RADIUS_CAR / dis_c2o + l < obstacles_saw[i].radius) {
-                is_visible = false;
-                break;
-            }
+    {
+        // 只检查敌方小车中点、左边缘、右边缘能否看见。
+        // 看见一个就算能看见。
+
+        TAngle center_c = car->getViewAngle();
+        TAngle width_c = VIEW_DEG / 2;
+
+        TCoor distance_t = car_p.getDistance(enemy_p);
+        TAngle center_t = atan2_d(enemy_p.y - car_p.y, enemy_p.x - car_p.x);
+        TAngle width_t = abs(asin_d(RADIUS_CAR / distance_t));
+        TAngle left_t = center_t - width_t, 
+            right_t = center_t + width_t;
+        
+        bool left_visible = abs(minus_angle_d(left_t, center_c)) < width_c, 
+            right_visible = abs(minus_angle_d(right_t, center_c)) < width_c,
+            center_visible = abs(minus_angle_d(center_t, center_c)) < width_c;
+        
+        for (int i = 0; i < Obstacle.size(); ++i) {
+            TCoor distance_o = Obstacle[i].coor.getDistance(car_p);
+            if (distance_o > distance_t) continue;
+
+            TAngle center_o = atan2_d(Obstacle[i].coor.y - car_p.y, Obstacle[i].coor.x - car_p.x);
+            TAngle width_o = abs(asin_d(Obstacle[i].radius / distance_o));
+
+            left_visible = left_visible && abs(minus_angle_d(left_t, center_o)) > width_o,
+            right_visible = right_visible && abs(minus_angle_d(right_t, center_o)) > width_o,
+            center_visible = center_visible && abs(minus_angle_d(center_t, center_o)) > width_o;
+
         }
+
+        if (left_visible || right_visible || center_visible) 
+            cars_saw.push_back(cars[1 - id]);
+
     }
-    else {
-        is_visible = false;
-    }
-    if (is_visible) {
-        cars_saw.push_back(cars[1 - id]);
-    }
-    //car->getView(cars_saw, obstacles_saw, props_saw);
+
 }
 
 // 圆形挤出模型

@@ -69,6 +69,7 @@ PLAYER_ID Game::frameRoutine()
         Info info;
 
         info.id = id;
+        info.round = frame;
         info.coor = car[id]->getCoor();
         info.car_angle = car[id]->getCarAngle();
         info.attack_angle = car[id]->getAttackAngle();
@@ -91,8 +92,8 @@ PLAYER_ID Game::frameRoutine()
 
         // TODO: getview获得视野并填充info结构体
 
-        pc = player_list[id]->timedRun(info, 1000);
-        //pc = player_list[id]->run(info);
+        //pc = player_list[id]->timedRun(info, 1000);
+        pc = player_list[id]->run(info);
         car[id]->setLeftSpeed(pc.left_speed);
         car[id]->setRightSpeed(pc.right_speed);
         car[id]->rotateAttack(pc.steer_angle); 
