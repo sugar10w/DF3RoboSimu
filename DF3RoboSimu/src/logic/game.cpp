@@ -6,6 +6,8 @@ using namespace std;
 
 Game::Game(char* recordFile, char* mapFile) {
 
+    srand(time(NULL));
+
     map = new Map(this, mapFile); 
 
     valid = false;
@@ -79,10 +81,10 @@ PLAYER_ID Game::frameRoutine()
         info.spd_status = car[id]->getSpdStatus() == SPD_HIGH;
         info.frz_status = car[id]->getSpdStatus() == SPD_LOW;
         info.shd_status = car[id]->getDefStatus() == DEF_ARM;
-        info.can_atk = car[id]->getAtkCdStatus() == BUFF_NORM;
-        info.can_spd = car[id]->getSpeedUpCdStatus() == BUFF_NORM;
-        info.can_frz = car[id]->getSlowDownCdStatus() == BUFF_NORM;
-        info.can_shd = car[id]->getDefCdStatus() == BUFF_NORM;
+        info.can_atk = car[id]->getAtkCdStatus() == BUFF_NORM && car[id]->getMAG() > 0;
+        info.can_spd = car[id]->getSpeedUpCdStatus() == BUFF_NORM && car[id]->getMP() >= BUFF_MP[BUFF_SPEEDUP];
+        info.can_frz = car[id]->getSlowDownCdStatus() == BUFF_NORM && car[id]->getMP() >= BUFF_MP[BUFF_SLOWDOWN];
+        info.can_shd = car[id]->getDefCdStatus() == BUFF_NORM && car[id]->getMP() >= BUFF_MP[BUFF_DEFEND];
         map->getView(
             car[id],
             cars,
@@ -206,6 +208,7 @@ bool Game::attack(PLAYER_ID id, ATK_NUM_MAG mag_num) {
     {
     case ATK_FRONT: case ATK_SIDE: case ATK_BACK:
         car[emy_id]->getAttacked(mag_num, hit);
+        car[emy_id]->setPos(map->getKnockedPos(car[id], car[emy_id], mag_num));
         break;
     case ATK_MISS: break;
     default: break;

@@ -166,6 +166,12 @@ protected:
     //     @param _coor 小车坐标
     //     @param _tank_angle 车头方向
     void setPos(Point<TCoor> _coor, TAngle _car_angle);
+    // 设置小车位置
+    //    
+    //     由Map设定坐标和车头方向。
+    //     @param _coor 小车坐标
+    void setPos(Point<TCoor> _coor);
+
 
     // 设置小车技能值
     //    
@@ -190,23 +196,43 @@ private:
     //     更新小车状态
     void statusUpdate();
 
-    THP hp = HP_MAX;  // 血量，范围[0, HP_MAX]
-    TSpeed lspd = 0.0;   // 左轮速度，范围[-spd_status*SPD_BASE, spd_status*SPD_BASE]
-    TSpeed rspd = 0.0;   // 右轮速度，范围[-spd_status*SPD_BASE, spd_status*SPD_BASE]
-    TAngle car_angle = 0.0;  // 车头方向，范围[0, 360)，以水平向右为起始，逆时针计算
-    TAngle attack_angle = 0.0;  // 相对于前进方向的射击角度，范围[0, 360)，以车头方向为起始，逆时针计算
-    TMP mp = MP_MAX;  // 技能，范围[0, MP_MAX]
-    TMag mag = MAG_MAX;  // 弹夹，范围[0, MAG_MAX]
-    PLAYER_ID team = UNKNOWN_PLAYER;  // 队伍id
-    TFrame def_cd_time = -FRAME_MINUTE,  // 能量护罩释放时间
-        def_valid_time = -FRAME_MINUTE,  // 能量护罩生效时间(考虑到吃到道具和主动释放)
-        atk_cd_time = -FRAME_MINUTE,  // 攻击释放时间
-        changemag_cd_time = -FRAME_MINUTE,  // 换弹夹时间
-        spdup_cd_time = -FRAME_MINUTE,  // 加速释放时间
-        spdup_valid_time = -FRAME_MINUTE,  // 加速生效时间(考虑到吃到道具和主动释放)
-        slowdown_cd_time = -FRAME_MINUTE,  // 延缓射线释放时间
-        sloweddown_time = -FRAME_MINUTE;  // 开始被减速时间
-    PIInstruction buffRecord = PIInstruction_NULL;  // 记录该帧内所使用buff
+    // 血量，范围[0, HP_MAX]
+    THP hp = HP_MAX;  
+    // 左轮速度，范围[-spd_status*SPD_BASE, spd_status*SPD_BASE]
+    TSpeed lspd = 0.0;   
+    // 右轮速度，范围[-spd_status*SPD_BASE, spd_status*SPD_BASE]
+    TSpeed rspd = 0.0;   
+    // 车头方向，范围[0, 360)，以水平向右为起始，逆时针计算
+    TAngle car_angle = 0.0; 
+    // 相对于前进方向的射击角度，范围[0, 360)，以车头方向为起始，逆时针计算
+    TAngle attack_angle = 0.0; 
+    // 技能，范围[0, MP_MAX]
+    TMP mp = MP_MAX;  
+    // 弹夹，范围[0, MAG_MAX]
+    TMag mag = MAG_MAX;  
+    // 队伍id
+    PLAYER_ID team = UNKNOWN_PLAYER;  
+
+    // 普攻冷却时间
+    TFrame atk_cd_time = -FRAME_MINUTE;
+    // 换弹夹时间
+    TFrame changemag_cd_time = -FRAME_MINUTE;
+
+    // 能量护罩冷却时间
+    TFrame def_cd_time = -FRAME_MINUTE;
+    // 能量护罩生效时间(考虑到吃到道具和主动释放)
+    TFrame def_valid_time = -FRAME_MINUTE;
+
+    // 加速冷却时间
+    TFrame spdup_cd_time = -FRAME_MINUTE;
+    // 加速生效时间(考虑到吃到道具和主动释放)
+    TFrame spdup_valid_time = -FRAME_MINUTE;  
+    // 延缓射线冷却时间
+    TFrame slowdown_cd_time = -FRAME_MINUTE;  
+    // 被减速生效时间
+    TFrame sloweddown_time = -FRAME_MINUTE; 
+    // 记录该帧内所使用buff
+    PIInstruction buffRecord = PIInstruction_NULL;
 
     Map* map = NULL;  // 所属地图
     Game* game = NULL;  //所属游戏控制类

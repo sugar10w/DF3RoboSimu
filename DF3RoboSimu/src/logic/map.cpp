@@ -108,8 +108,12 @@ bool Map::init(const Game* _game, const char* filename)
 //道具刷新
 void Map::refreshProp(TFrame frame)
 {
-    //五秒后开始生成每种道具
-    if (game->getTime() >= PROP_START_TIME) {
+    
+    if (game->getTime() == PROP_START_TIME) { // PROP_START_TIME的时刻立即产生所有道具
+        for (int i = 0; i < props.size(); i++)
+            props[i].regenerate();
+    }
+    else if (game->getTime() > PROP_START_TIME) { // PROP_START_TIME后开始生成每种道具
         for (int i = 0; i < props.size(); i++)
             props[i].round_operation();
     }
@@ -288,6 +292,26 @@ TAngle Map::getNextAngle(const Car * car) const
 {
     TAngle deta = (car->getLeftSpeed() - car->getRightSpeed()) / 2 / RADIUS_CAR / FREQ * 180 / 3.14159;
     return fmod(car->getCarAngle() - deta + 360, 360);
+}
+
+// 获取击退后的位置（实验中）
+Point<TCoor> Map::getKnockedPos(const Car * car_attack, const Car * car_knocked, ATK_NUM_MAG num) const
+{
+    Point<TCoor> car_c = car_attack->getCoor(), car_t = car_knocked->getCoor();
+    TCoor distance = car_c.getDistance(car_t);
+    Point<TCoor> vector_t = (car_t - car_c) / distance;
+    Point<TCoor> coor_temp = car_t + vector_t * ATK_KNOCKED_DIST[num]
+        + Point<TCoor>(rand() / (double)RAND_MAX - 0.5, rand() / (double)RAND_MAX - 0.5) * ATK_KNOCKED_DIST[num] / 3.0;
+
+    // 障碍物
+    for (int i = 0; i < Obstacle.size(); i++) {
+        coor_temp = squeezeOut(coor_temp, Obstacle[i].coor, Obstacle[i].radius + RADIUS_CAR);
+    }
+    // 对方小车
+    coor_temp = squeezeOut(coor_temp, car_attack->getCoor(), 2 * RADIUS_CAR);
+
+    return coor_temp;
+
 }
 
 //获取地图信息

@@ -59,7 +59,11 @@ public:
     
     // 获取下一瞬间坐标
     Point<TCoor> getNextPos(const Car* car, const Car* car_enemy) const; 
+    // 获取下一瞬间角度
     TAngle getNextAngle(const Car* car) const;
+
+    // 获取被击退后的坐标 （实验中）
+    Point<TCoor> getKnockedPos(const Car* car, const Car* car_enemy, ATK_NUM_MAG num) const;
 
     // 地图当前信息，用于导出
     MapInfo getMapInfo() const;

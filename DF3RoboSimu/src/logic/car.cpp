@@ -22,6 +22,11 @@ void Car::setPos(Point<TCoor> _coor, TAngle _car_angle)
     car_angle = fmod(_car_angle, 360.0);
 }
 
+void Car::setPos(Point<TCoor> _coor)
+{
+    coor = _coor;
+}
+
 bool Car::isOOR()
 {
     return (coor.x<0 || coor.x>MAP_WIDTH - 1 || coor.y<0 || coor.y >MAP_HEIGHT - 1) ? true : false;
