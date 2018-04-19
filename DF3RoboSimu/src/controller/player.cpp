@@ -53,6 +53,7 @@ PlayerControl Player::timedRun(const Info info, int msecond)
 
     if (!isend) {
         pthread_kill(pid, SIGTERM);
+        cout << "[Warning] Player " << file_name << " out of time limit." << endl;
         kill();
     }
     
@@ -73,10 +74,10 @@ Player::~Player() {
 }
 
 PlayerControl Player::run(const Info info) {
-    
+
     int time_a = GetTickCount();
     int time_b;
-    PlayerControl pc{0, 0, 0, NoAction};
+    PlayerControl pc{ 0, 0, 0, NoAction };
 
     if (!isValid()) return pc;
 
@@ -92,7 +93,13 @@ PlayerControl Player::run(const Info info) {
 
 
     time_b = GetTickCount();
-    //if (time_b - time_a > 2000) kill();
+
+#ifndef _DEBUG
+    if (time_b - time_a > 1000) {
+        cout << "[Warning] Player " << file_name << " out of time limit." << endl;
+        kill();
+    }
+#endif // _DEBUG
 
     return pc;
 }

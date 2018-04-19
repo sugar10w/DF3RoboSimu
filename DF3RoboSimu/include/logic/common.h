@@ -104,9 +104,9 @@ enum BUFF_CD_STATUS { BUFF_NORM, BUFF_CD };
 // 技能类型
 enum BUFF_TYPE                 { BUFF_SLOWDOWN,    BUFF_SPEEDUP,   BUFF_DEFEND };
 // 释放技能所需魔法值
-const TMP BUFF_MP[] =          { 40,               60,             60 };
+const TMP BUFF_MP[] =          { 30,               60,             60 };
 // 技能冷却时间
-const TFrame BUFF_CD_TIME[] =  { 5*FREQ,           10*FREQ,        10*FREQ };
+const TFrame BUFF_CD_TIME[] =  { 5*FREQ,           15*FREQ,        15*FREQ };
 // 技能持续时间
 const TFrame BUFF_VALID_TIME = 10 * FREQ;
 
@@ -119,11 +119,13 @@ enum ATK_NUM_MAG { ATK_1MAG, ATK_2MAG, ATK_3MAG};
 // 普攻等级对应的弹夹消耗
 const TMag ATK_MAG_DEMAND[3] = { 1, 2, 3 };
 // 普攻对应的伤害
-const THP ATK_POINTS[3][3] = { {3,4,5},{5,7,9},{7,10,13} };
+const THP ATK_POINTS[3][3] = { {2,3,4},{4,6,8},{6,9,12} };
 // 普攻冷却时间
 const TFrame ATK_CD_TIME = 0.5 * FREQ;
-// 最长攻击范围
-const TCoor ATK_MAX_LEN = 150;
+// 最佳攻击范围（满命中距离）
+const TCoor ATK_BEST_LEN = 30;
+// 极限攻击范围（不可能命中临界距离，视野极限距离）
+const TCoor ATK_MAX_LEN = 200;
 // 击退长度
 const TCoor ATK_KNOCKED_DIST[3] = { 5, 10, 15 };
 

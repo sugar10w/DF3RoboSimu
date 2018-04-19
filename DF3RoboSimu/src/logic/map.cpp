@@ -164,9 +164,14 @@ ATK_POS Map::aim_check(Point<TCoor> P_attack, TAngle car_angle, TAngle attack_an
     TCoor distance_t = P_attack.getDistance(P_target);
     TAngle center_t = atan2_d(P_target.y - P_attack.y, P_target.x - P_attack.x);
     TAngle width_t = abs(asin_d(RADIUS_CAR / distance_t));
+    double possibility = (distance_t - ATK_BEST_LEN) / (ATK_MAX_LEN - ATK_BEST_LEN);
 
     if (distance_t > ATK_MAX_LEN) return ATK_MISS;
+    if (rand() / (double)RAND_MAX < possibility) return ATK_MISS;
     if (abs(minus_angle_d(center_c, center_t)) > width_t) return ATK_MISS;
+
+    // 按照距离强制判定
+
 
     for (int i = 0; i < Obstacle.size(); ++i) {
         TCoor distance_o = Obstacle[i].coor.getDistance(P_attack);
@@ -248,7 +253,7 @@ void Map::getView(Car * car, vector<car_info>& cars,
 
         }
 
-        if (left_visible || right_visible || center_visible) 
+        if (distance_t < ATK_MAX_LEN && (left_visible || right_visible || center_visible))
             cars_saw.push_back(cars[1 - id]);
 
     }

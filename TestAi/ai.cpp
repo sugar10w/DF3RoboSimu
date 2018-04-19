@@ -44,15 +44,15 @@ PlayerControl bad_ai(const Info info) {
 // 双方选手的关键点
 Point<TCoor> target_coors[2][4] = {
     {
+        Point<TCoor>(200, 75),  //SPD
+        Point<TCoor>(200, 225), //DEF
         Point<TCoor>(20, 20),   //HP
         Point<TCoor>(20, 280),  //MP
-        Point<TCoor>(200, 225), //DEF
-        Point<TCoor>(200, 75),  //SPD
     },{
+        Point<TCoor>(200, 75),   //SPD
+        Point<TCoor>(200, 225), //DEF
         Point<TCoor>(380, 280), //HP
         Point<TCoor>(380, 20),  //MP
-        Point<TCoor>(200, 225), //DEF
-        Point<TCoor>(200, 75)   //SPD
     } };
 const int CNT_TARGET = 4;
 
@@ -160,8 +160,8 @@ PlayerControl state_machine_ai(const Info info) {
         },{
             Point<TCoor>(380, 280), //HP
             Point<TCoor>(380, 20),  //MP
-            Point<TCoor>(200, 225), //DEF
-            Point<TCoor>(200, 75)   //SPD
+            Point<TCoor>(200, 75),  //SPD
+            Point<TCoor>(200, 225)  //DEF
         } };
     const int CNT_TARGET = 4;
 
@@ -170,6 +170,7 @@ PlayerControl state_machine_ai(const Info info) {
     PlayerControl pc;
     // 常数
     static const THP LOW_HP_THRESHOLD = 60; // 低血量警告
+    static const THP GIVEUP_HP_THRESHOLD = 30; // 非常低血量警告
     static const int CANNOT_FIND_ENEMY_MAX = 30; // 找不到敌人的容忍时间
     // 敌人可能的位置
     static Point<TCoor> enemy_pos(200, 150); 
@@ -190,7 +191,7 @@ PlayerControl state_machine_ai(const Info info) {
         // 血量过低进入S_Defend；等待自转时间过长进入S_Cruise；
 
         if (info.cars.size() > 0) { // 找到敌人
-            
+
             TCoor distance = info.cars[0].coor.getDistance(info.coor);
 
             cannot_find_enemy_cnt = 0;
@@ -198,7 +199,7 @@ PlayerControl state_machine_ai(const Info info) {
             enemy_HP = info.cars[0].hp;
 
             pc = rush_target(info, enemy_pos);
-            if (distance < ATK_MAX_LEN) {
+            if (distance < 100) {
                 if (info.can_frz) pc.action = FrozenRays;
                 else pc.action = Attack3;
             }
@@ -220,7 +221,8 @@ PlayerControl state_machine_ai(const Info info) {
         }
 
         // 状态转移
-        if (info.hp < LOW_HP_THRESHOLD && info.hp < enemy_HP && curr_tp == HP_PAK) {
+        if ((info.hp < LOW_HP_THRESHOLD && info.hp < enemy_HP && curr_tp == HP_PAK)
+            || (info.hp < GIVEUP_HP_THRESHOLD && info.hp < enemy_HP)) {
             state = S_Defend;
         }
         else if (cannot_find_enemy_cnt >= CANNOT_FIND_ENEMY_MAX) {
@@ -267,8 +269,9 @@ PlayerControl state_machine_ai(const Info info) {
         }
 
         pc = rush_target(info, target_coor);
-        if (info.can_shd && !info.shd_status) pc.action = Shield;
-        else if (info.can_spd && !info.spd_status) pc.action = SpeedUp;
+        if (info.can_spd && !info.spd_status) pc.action = SpeedUp;
+        else if (info.can_shd && !info.shd_status) pc.action = Shield;
+        
 
         // 状态转移
         if (curr_tp != HP_PAK && info.hp < lastHP) {
