@@ -106,7 +106,7 @@ enum BUFF_TYPE                 { BUFF_SLOWDOWN,    BUFF_SPEEDUP,   BUFF_DEFEND }
 // 释放技能所需魔法值
 const TMP BUFF_MP[] =          { 30,               60,             60 };
 // 技能冷却时间
-const TFrame BUFF_CD_TIME[] =  { 5*FREQ,           15*FREQ,        15*FREQ };
+const TFrame BUFF_CD_TIME[] =  { 10*FREQ,          20*FREQ,        20*FREQ };
 // 技能持续时间
 const TFrame BUFF_VALID_TIME = 10 * FREQ;
 

@@ -81,10 +81,16 @@ PLAYER_ID Game::frameRoutine()
         info.spd_status = car[id]->getSpdStatus() == SPD_HIGH;
         info.frz_status = car[id]->getSpdStatus() == SPD_LOW;
         info.shd_status = car[id]->getDefStatus() == DEF_ARM;
-        info.can_atk = car[id]->getAtkCdStatus() == BUFF_NORM && car[id]->getMAG() > 0;
-        info.can_spd = !info.spd_status && car[id]->getSpeedUpCdStatus() == BUFF_NORM && car[id]->getMP() >= BUFF_MP[BUFF_SPEEDUP];
-        info.can_frz = car[id]->getSlowDownCdStatus() == BUFF_NORM && car[id]->getMP() >= BUFF_MP[BUFF_SLOWDOWN];
-        info.can_shd = !info.shd_status && car[id]->getDefCdStatus() == BUFF_NORM && car[id]->getMP() >= BUFF_MP[BUFF_DEFEND];
+        info.can_atk = car[id]->getAtkCdStatus() == BUFF_NORM 
+            && car[id]->getMAG() > 0;
+        info.can_spd = !info.spd_status
+            && car[id]->getSpeedUpCdStatus() == BUFF_NORM 
+            && car[id]->getMP() >= BUFF_MP[BUFF_SPEEDUP];
+        info.can_shd = !info.shd_status 
+            && car[id]->getDefCdStatus() == BUFF_NORM 
+            && car[id]->getMP() >= BUFF_MP[BUFF_DEFEND];
+        info.can_frz = car[id]->getSlowDownCdStatus() == BUFF_NORM 
+            && car[id]->getMP() >= BUFF_MP[BUFF_SLOWDOWN];
         map->getView(
             car[id],
             cars,

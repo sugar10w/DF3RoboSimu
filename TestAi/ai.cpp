@@ -11,7 +11,7 @@ static double cos_d(double theta) { return cos(theta / 180 * 3.14159); }
 static double sin_d(double theta) { return sin(theta / 180 * 3.14159); }
 static double tan_d(double theta) { return tan(theta / 180 * 3.14159); }
 static double atan2_d(double y, double x) { return (abs(x)<1e-4 && abs(y)<1e-4) ? 0.0 : 180 / 3.14159*atan2(y, x); }
-static double atan2_d(Point<TCoor> target, Point<TCoor> cur) { return (cur.getDistance(target) < 1e-4) ? 0.0 : 180 / 3.14159*atan2(target.y - cur.y, target.x - cur.x); }
+static double atan2_d(Point<double> target, Point<double> cur) { return (cur.getDistance(target) < 1e-4) ? 0.0 : 180 / 3.14159*atan2(target.y - cur.y, target.x - cur.x); }
 static double asin_d(double s) { return 180 / 3.14159*asin(s); }
 static double minus_angle_d(double t1, double t2) {
     double u = fmod(t1 - t2 + 360, 360);
@@ -42,22 +42,22 @@ PlayerControl bad_ai(const Info info) {
 // 跑点AI --- --- --- --- 
 
 // 双方选手的关键点
-Point<TCoor> target_coors[2][4] = {
+Point<double> target_coors[2][4] = {
     {
-        Point<TCoor>(200, 75),  //SPD
-        Point<TCoor>(200, 225), //DEF
-        Point<TCoor>(20, 20),   //HP
-        Point<TCoor>(20, 280),  //MP
+        Point<double>(200, 75),  //SPD
+        Point<double>(200, 225), //DEF
+        Point<double>(20, 20),   //HP
+        Point<double>(20, 280),  //MP
     },{
-        Point<TCoor>(200, 75),   //SPD
-        Point<TCoor>(200, 225), //DEF
-        Point<TCoor>(380, 280), //HP
-        Point<TCoor>(380, 20),  //MP
+        Point<double>(200, 75),   //SPD
+        Point<double>(200, 225), //DEF
+        Point<double>(380, 280), //HP
+        Point<double>(380, 20),  //MP
     } };
 const int CNT_TARGET = 4;
 
 // 给出前往指定地点的指令
-PlayerControl rush_target(const Info info, Point<TCoor> target_coor) {
+PlayerControl rush_target(const Info info, Point<double> target_coor) {
     // 已经到了
     if (target_coor.getDistance(info.coor) < RADIUS_PROP) {
         return PlayerControl{ -75, 75, 0, NoAction };
@@ -98,7 +98,7 @@ PlayerControl rush_ai(const Info info) {
 
     static int target_id = 0;
 
-    Point<TCoor> target_coor = target_coors[info.id][target_id];
+    Point<double> target_coor = target_coors[info.id][target_id];
     if (target_coor.getDistance(info.coor) < RADIUS_PROP) {
         ++target_id; target_id %= CNT_TARGET;
         target_coor = target_coors[info.id][target_id];
@@ -114,7 +114,7 @@ PlayerControl attack_ai(const Info info) {
     PlayerControl pc;
 
     // 移动：敌方，取道具，跑点
-    Point<TCoor> target_coor = info.coor;
+    Point<double> target_coor = info.coor;
     if (info.cars.size() > 0 && info.mag > 0)
     {
         target_coor = info.cars[0].coor;
@@ -151,17 +151,17 @@ PlayerControl state_machine_ai(const Info info) {
         S_Defend  // 防守
     } state = S_Cruise;
     // 巡航目标点
-    Point<TCoor> target_coors[2][4] = {
+    Point<double> target_coors[2][4] = {
         {
-            Point<TCoor>(20, 20),   //HP
-            Point<TCoor>(20, 280),  //MP
-            Point<TCoor>(200, 225), //DEF
-            Point<TCoor>(200, 75),  //SPD
+            Point<double>(20, 20),   //HP
+            Point<double>(20, 280),  //MP
+            Point<double>(200, 225), //DEF
+            Point<double>(200, 75),  //SPD
         },{
-            Point<TCoor>(380, 280), //HP
-            Point<TCoor>(380, 20),  //MP
-            Point<TCoor>(200, 75),  //SPD
-            Point<TCoor>(200, 225)  //DEF
+            Point<double>(380, 280), //HP
+            Point<double>(380, 20),  //MP
+            Point<double>(200, 75),  //SPD
+            Point<double>(200, 225)  //DEF
         } };
     const int CNT_TARGET = 4;
 
@@ -169,19 +169,19 @@ PlayerControl state_machine_ai(const Info info) {
     // 将作出的决策
     PlayerControl pc;
     // 常数
-    static const THP LOW_HP_THRESHOLD = 60; // 低血量警告
-    static const THP GIVEUP_HP_THRESHOLD = 30; // 非常低血量警告
+    static const int LOW_HP_THRESHOLD = 60; // 低血量警告
+    static const int GIVEUP_HP_THRESHOLD = 30; // 非常低血量警告
     static const int CANNOT_FIND_ENEMY_MAX = 30; // 找不到敌人的容忍时间
     // 敌人可能的位置
-    static Point<TCoor> enemy_pos(200, 150); 
+    static Point<double> enemy_pos(200, 150); 
     // 敌人上一次血量
-    static THP enemy_HP = 100;
+    static int enemy_HP = 100;
     // 持续找不到敌人的时间
     static int cannot_find_enemy_cnt = 0;
     // 巡航时的目标点
     static int cruise_target_id = 0;
     // 上一回合的hp
-    static THP lastHP = 100;
+    static int lastHP = 100;
 
 
     switch (state)
@@ -192,7 +192,7 @@ PlayerControl state_machine_ai(const Info info) {
 
         if (info.cars.size() > 0) { // 找到敌人
 
-            TCoor distance = info.cars[0].coor.getDistance(info.coor);
+            double distance = info.cars[0].coor.getDistance(info.coor);
 
             cannot_find_enemy_cnt = 0;
             enemy_pos = info.cars[0].coor;
@@ -235,7 +235,7 @@ PlayerControl state_machine_ai(const Info info) {
         // 巡航状态。找道具。
         // 血量过低进入S_Defend；看到敌人或发现收到伤害进入S_Attack；
 
-        Point<TCoor> target_coor = target_coors[info.id][3]; // 默认抢SPD
+        Point<double> target_coor = target_coors[info.id][3]; // 默认抢SPD
         for (int i = 0; i < info.props.size(); ++i) {
             target_coor = info.props[i].pos;
             if (info.props[i].tp == MP_PAK) break;  // 抢MP
@@ -261,7 +261,7 @@ PlayerControl state_machine_ai(const Info info) {
         // 血量恢复进入S_Cruise；
 
         PROP_TYPE curr_tp = MP_PAK;
-        Point<TCoor> target_coor = target_coors[info.id][0]; // 默认去自己血包所在地         
+        Point<double> target_coor = target_coors[info.id][0]; // 默认去自己血包所在地         
         for (int i = 0; i < info.props.size(); ++i) {
             target_coor = info.props[i].pos;
             curr_tp = info.props[i].tp;

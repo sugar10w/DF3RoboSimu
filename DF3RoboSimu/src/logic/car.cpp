@@ -1,6 +1,12 @@
 // 小车
 #include "logic/car.h"
 
+static double minus_angle_d(double t1, double t2) {
+    double u = fmod(t1 - t2 + 360, 360);
+    if (u > 180) u -= 360;
+    return u;
+}
+
 TFrame Car::getTime() const {
     return game ? game->getTime() : -1; 
 }
@@ -60,15 +66,8 @@ TSpeed Car::setRightSpeed(TSpeed _rspd)
 
 TAngle Car::rotateAttack(TAngle _target_attack_angle)
 {
-    TAngle _angle = 0;
 
-    _target_attack_angle = fmod(_target_attack_angle + 360, 360);
-
-    // 判断合理的转向
-    TAngle theta_plus = fmod(_target_attack_angle + 360 - attack_angle, 360);
-    TAngle theta_minus = fmod(attack_angle + 360 - _target_attack_angle, 360);
-    if (theta_plus < theta_minus) _angle = theta_plus;
-    else _angle = -theta_minus;
+    TAngle _angle = minus_angle_d(_target_attack_angle, attack_angle);
 
     //旋转之
     if (_angle < -ROTATE_SPD)
@@ -101,13 +100,13 @@ bool Car::changeMag()
 
 bool Car::emitSlowdown()
 {
-    if (slowdown_cd_status == BUFF_NORM && atk_cd_status == BUFF_NORM && changemag_cd_status == BUFF_NORM
+    if (slowdown_cd_status == BUFF_NORM
         && mp >= BUFF_MP[BUFF_SLOWDOWN])
     {
         game->slowdown(getTeam()); 
         mp -= BUFF_MP[BUFF_SLOWDOWN];
-        atk_cd_status = slowdown_cd_status = BUFF_CD;
-        atk_cd_time = slowdown_cd_time = getTime();        
+        slowdown_cd_status = BUFF_CD;
+        slowdown_cd_time = getTime();        
         buffRecord = PIInstruction_slowdown;
         return true;
     }
@@ -170,10 +169,6 @@ bool Car::attack(ATK_NUM_MAG num)
     }
 }
 
-/*void Car::getView(std::vector<car_info>& cars, std::vector<obs_info>& obs, std::vector<prop_info>& props)
-{
-    //map->getView(this, cars); //TODO
-}*/
 
 PlayerInfo Car::frameRoutine()
 {

@@ -42,7 +42,7 @@ struct Info {
 
 };
 
-// 玩家的特殊动作
+// 玩家的主动技能
 enum PlayerAction {
     // 不行动
     NoAction,
@@ -50,7 +50,7 @@ enum PlayerAction {
     Attack1, Attack2, Attack3,
     // 填充弹夹
     ChangeMag,
-    // 延缓射线
+    // 冰冻射线
     FrozenRays,
     // 加速
     SpeedUp,
