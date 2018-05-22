@@ -60,36 +60,36 @@ bool Map::init(const Game* _game, const char* filename)
         string temp;
         vector<string> paras;
 
-        getline(file, temp, '#');
+        getline(file, temp);
         paras = split(temp, ' ');
         props.push_back(Prop(HP_PAK, atof(paras[0].c_str()), atof(paras[1].c_str()), P0));
 
-        getline(file, temp); getline(file, temp, '#');
+        getline(file, temp);
         paras = split(temp, ' ');
         props.push_back(Prop(HP_PAK, atof(paras[0].c_str()), atof(paras[1].c_str()), P1));
 
-        getline(file, temp); getline(file, temp, '#');
+        getline(file, temp);
         paras = split(temp, ' ');
         props.push_back(Prop(MP_PAK, atof(paras[0].c_str()), atof(paras[1].c_str()), P0));
 
-        getline(file, temp); getline(file, temp, '#');
+        getline(file, temp); 
         paras = split(temp, ' ');
         props.push_back(Prop(MP_PAK, atof(paras[0].c_str()), atof(paras[1].c_str()), P1));
 
-        getline(file, temp); getline(file, temp, '#');
+        getline(file, temp); 
         paras = split(temp, ' ');
         props.push_back(Prop(SPD_BUFF, atof(paras[0].c_str()), atof(paras[1].c_str()), UNKNOWN_PLAYER));
 
-        getline(file, temp); getline(file, temp, '#');
+        getline(file, temp); 
         paras = split(temp, ' ');
         props.push_back(Prop(DEF_BUFF, atof(paras[0].c_str()), atof(paras[1].c_str()), UNKNOWN_PLAYER));
 
-        getline(file, temp); getline(file, temp, '#');
+        getline(file, temp);
         //paras = split(temp, ' ');
         //car1 = new Car(Point<TCoor>(atof(paras[0].c_str()), atof(paras[1].c_str())), atof(paras[3].c_str()), 1);
         //此处未初始化Car
 
-        getline(file, temp); getline(file, temp);
+        getline(file, temp); 
         //paras = split(temp, ' ');
         //car2 = new Car(Point<TCoor>(atof(paras[0].c_str()), atof(paras[1].c_str())), atof(paras[3].c_str()), 2);
         //此处未初始化Car
@@ -132,9 +132,9 @@ bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle
         string temp;
         vector<string> paras;
         for (int i = 0; i < 6; i++) {
-            getline(file, temp, '#'); getline(file, temp); //跳过道具参数
+            getline(file, temp); //跳过道具参数
         }
-        getline(file, temp,'#');
+        getline(file, temp);
         //car0
         if (id == P0) {
             paras = split(temp, ' ');
@@ -142,7 +142,7 @@ bool Map::getInitPos(PLAYER_ID id, Point<TCoor>& birth_point, TAngle & car_angle
             car_angle = atof(paras[2].c_str());
             return true;
         }
-        getline(file, temp); getline(file, temp,'#');
+        getline(file, temp);
         //car1
         if (id == P1) {
             paras = split(temp, ' ');
