@@ -43,7 +43,7 @@ Game::Game(char* recordFile, char* mapFile) {
     record_file.flush();
 
     srand((unsigned)time(NULL));
-    randframe = rand() % 2;
+    //randframe = rand() % 2;
 
     valid = true;
 }
@@ -98,8 +98,6 @@ PLAYER_ID Game::frameRoutine()
             info.props,
             info.obs);
 
-        // TODO: getview获得视野并填充info结构体
-
         //pc = player_list[id]->timedRun(info, 1000);
         pc = player_list[id]->run(info);
         car[id]->setLeftSpeed(pc.left_speed);
@@ -118,6 +116,7 @@ PLAYER_ID Game::frameRoutine()
         default: break;
         }
 
+        //cout << "id=" << id << "\tl=" << pc.left_speed << "\tr=" << pc.right_speed << "\ta=" << pc.steer_angle << "\tA=" << pc.action << endl;
     }
 
 
@@ -142,8 +141,14 @@ PLAYER_ID Game::frameRoutine()
     map->refreshProp(frame);
 
     //3.调用小车的car->frameRoutine()
-    pi0 = car[0]->frameRoutine();
-    pi1 = car[1]->frameRoutine();
+    if (rand() % 2 == 0) {
+        pi0 = car[0]->frameRoutine();
+        pi1 = car[1]->frameRoutine();
+    }
+    else {
+        pi1 = car[1]->frameRoutine();
+        pi0 = car[0]->frameRoutine();
+    }
 
     //4. TODO 检查道具拾取
     for (int id = 0; id < 2; ++id)

@@ -35,7 +35,7 @@ void Car::setPos(Point<TCoor> _coor)
 
 bool Car::isOOR()
 {
-    return (coor.x<0 || coor.x>MAP_WIDTH - 1 || coor.y<0 || coor.y >MAP_HEIGHT - 1) ? true : false;
+    return coor.x < 0 || coor.x > MAP_WIDTH || coor.y < 0 || coor.y > MAP_HEIGHT;
 }
 
 TSpeed Car::setLeftSpeed(TSpeed _lspd)

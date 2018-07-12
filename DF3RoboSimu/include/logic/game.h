@@ -76,5 +76,5 @@ private:
     Car *car[2] = { NULL, NULL };
     std::fstream record_file;
 
-    int randframe = 0; // 随机数确定第一帧先后顺序
+    //int randframe = 0; // 随机数确定第一帧先后顺序
 };
