@@ -79,7 +79,7 @@ PlayerControl rush_target(const Info info, Point<double> target_coor) {
         if (delta_angle > 0)
             return PlayerControl{ max_speed - 2 * ss, max_speed, delta_attack_angle, NoAction };
         else
-            return PlayerControl{ max_speed, max_speed - 2 * ss, delta_attack_angle, NoAction };
+            return PlayerControl{ max_speed, max_speed + 2 * ss, delta_attack_angle, NoAction };
     }
     else if (abs(delta_angle) > max_roate_angle) { // 全速转
         if (delta_angle > 0)  // 左转

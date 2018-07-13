@@ -89,7 +89,7 @@ enum PROP_TYPE                  { SPD_BUFF,     DEF_BUFF,   HP_PAK,     MP_PAK }
 // 道具的冷却时间（回合数）
 const TFrame PROP_CD_TIME[] =   { 15*FREQ,      15*FREQ,    20*FREQ,    20*FREQ};
 // 道具的判定半径
-const TCoor RADIUS_PROP = 5;
+const TCoor RADIUS_PROP = 6;
 // 第一次出现道具的时间
 const TFrame PROP_START_TIME = 2 * FREQ;
 // HP道具恢复的生命值

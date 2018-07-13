@@ -13,10 +13,7 @@ TFrame Car::getTime() const {
 
 void Car::slowedDown()
 {
-    if (spd_status == SPD_HIGH)
-        spd_status = SPD_NORM;
-    else if (spd_status == SPD_NORM)
-        spd_status = SPD_LOW;
+    spd_status = SPD_LOW;
     lspd /= 2;
     rspd /= 2;
     sloweddown_time = getTime();
@@ -41,12 +38,10 @@ bool Car::isOOR()
 TSpeed Car::setLeftSpeed(TSpeed _lspd)
 {
     double spd_limit = SPD_BASE * SPD_VAL[spd_status];
-    if (_lspd < -spd_limit)
-        lspd = -spd_limit;
-    else if (_lspd > spd_limit)
-        lspd = spd_limit;
-    else
-        lspd = _lspd;
+    if (isnan(_lspd)) lspd = 0;
+    else if (_lspd < -spd_limit) lspd = -spd_limit;
+    else if (_lspd > spd_limit) lspd = spd_limit;
+    else lspd = _lspd;
 
     return lspd;
 }
@@ -54,18 +49,17 @@ TSpeed Car::setLeftSpeed(TSpeed _lspd)
 TSpeed Car::setRightSpeed(TSpeed _rspd)
 {
     double spd_limit = SPD_BASE * SPD_VAL[spd_status];
-    if (_rspd < -spd_limit)
-        rspd = -spd_limit;
-    else if (_rspd > spd_limit)
-        rspd = spd_limit;
-    else
-        rspd = _rspd;
+    if (isnan(_rspd)) rspd = 0;
+    else if (_rspd < -spd_limit) rspd = -spd_limit;
+    else if (_rspd > spd_limit) rspd = spd_limit;
+    else rspd = _rspd;
 
     return rspd;
 }
 
 TAngle Car::rotateAttack(TAngle _target_attack_angle)
 {
+    if (isnan(_target_attack_angle)) _target_attack_angle = 0;
 
     TAngle _angle = minus_angle_d(_target_attack_angle, attack_angle);
 
