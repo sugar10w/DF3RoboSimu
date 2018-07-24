@@ -252,7 +252,7 @@ PlayerInfo Car::getPlayerInfo()
 {
     int curtime = game->getTime();
     PlayerInfo info;
-    info.HP = hp;
+    info.HP = (int)hp + 0.99;
     info.MP = mp;
     info.MAG = mag;
     info.x = (float)coor.x;

@@ -56,18 +56,26 @@ PLAYER_ID Game::frameRoutine()
         std::cout << "[Warning] some players not valid" << std::endl;
     }
 
-    PlayerInfo pi0, pi1;
+    // 玩家控制指令
+    PlayerControl pc[2];
+    // 玩家信息(log输出用)
+    PlayerInfo pi[2];
+    // 地图信息(log输出用)
     MapInfo mi;
-    
+    // 随机决定本回合判定顺序
+    int rid[2]; rid[0] = rand() % 2; rid[1] = 1 - rid[0];
+
+    // 为计算视野准备的信息
     vector<car_info> cars;
     for (int id = 0; id < 2; ++id) {
         cars.push_back(car[id]->getCarInfo());
     }
-    
-    // 0.调用用户函数并解释
-    for (int id = 0; id < 2; ++id) {
 
-        PlayerControl pc;
+    // 0.调用用户函数并解释
+
+    for (int i = 0; i < 2; ++i) {
+
+        int id = rid[i];
         Info info;
 
         info.id = id;
@@ -81,15 +89,15 @@ PLAYER_ID Game::frameRoutine()
         info.spd_status = car[id]->getSpdStatus() == SPD_HIGH;
         info.frz_status = car[id]->getSpdStatus() == SPD_LOW;
         info.shd_status = car[id]->getDefStatus() == DEF_ARM;
-        info.can_atk = car[id]->getAtkCdStatus() == BUFF_NORM 
+        info.can_atk = car[id]->getAtkCdStatus() == BUFF_NORM
             && car[id]->getMAG() > 0;
         info.can_spd = !info.spd_status
-            && car[id]->getSpeedUpCdStatus() == BUFF_NORM 
+            && car[id]->getSpeedUpCdStatus() == BUFF_NORM
             && car[id]->getMP() >= BUFF_MP[BUFF_SPEEDUP];
-        info.can_shd = !info.shd_status 
-            && car[id]->getDefCdStatus() == BUFF_NORM 
+        info.can_shd = !info.shd_status
+            && car[id]->getDefCdStatus() == BUFF_NORM
             && car[id]->getMP() >= BUFF_MP[BUFF_DEFEND];
-        info.can_frz = car[id]->getSlowDownCdStatus() == BUFF_NORM 
+        info.can_frz = car[id]->getSlowDownCdStatus() == BUFF_NORM
             && car[id]->getMP() >= BUFF_MP[BUFF_SLOWDOWN];
         map->getView(
             car[id],
@@ -98,13 +106,16 @@ PLAYER_ID Game::frameRoutine()
             info.props,
             info.obs);
 
-        //pc = player_list[id]->timedRun(info, 1000);
-        pc = player_list[id]->run(info);
-        car[id]->setLeftSpeed(pc.left_speed);
-        car[id]->setRightSpeed(pc.right_speed);
-        car[id]->rotateAttack(pc.steer_angle); 
+        //pc[id] = player_list[id]->timedRun(info, 1000);
+        pc[id] = player_list[id]->run(info);
+        car[id]->setLeftSpeed(pc[id].left_speed);
+        car[id]->setRightSpeed(pc[id].right_speed);
+        car[id]->rotateAttack(pc[id].steer_angle);
 
-        switch (pc.action) {
+        // 小车立即开始行动！
+        car[id]->frameRoutine();
+
+        switch (pc[id].action) {
         case NoAction: break;
         case Attack1: car[id]->attack(ATK_1MAG); break;
         case Attack2: car[id]->attack(ATK_2MAG); break;
@@ -116,10 +127,9 @@ PLAYER_ID Game::frameRoutine()
         default: break;
         }
 
-        //cout << "id=" << id << "\tl=" << pc.left_speed << "\tr=" << pc.right_speed << "\ta=" << pc.steer_angle << "\tA=" << pc.action << endl;
+        //cout << "id=" << id << "\tl=" << pc[id].left_speed << "\tr=" << pc[id].right_speed << "\ta=" << pc[id].steer_angle << "\tA=" << pc[id].action << endl;
     }
-
-
+    
     //1.地图伤害：超时减伤，界外减伤
     for (int i = sizeof(TIMEOUT_TIME) / sizeof(TFrame) - 1; i >= 0; --i)
     {
@@ -139,16 +149,6 @@ PLAYER_ID Game::frameRoutine()
 
     //2.调用Map刷新道具
     map->refreshProp(frame);
-
-    //3.调用小车的car->frameRoutine()
-    if (rand() % 2 == 0) {
-        pi0 = car[0]->frameRoutine();
-        pi1 = car[1]->frameRoutine();
-    }
-    else {
-        pi1 = car[1]->frameRoutine();
-        pi0 = car[0]->frameRoutine();
-    }
 
     //4. TODO 检查道具拾取
     for (int id = 0; id < 2; ++id)
@@ -174,9 +174,11 @@ PLAYER_ID Game::frameRoutine()
     }
 
     //5.写回放文件
+    for (int id = 0; id < 2; ++id) {
+        pi[id] = car[id]->getPlayerInfo();
+        record_file.write((char*)&(pi[id]), sizeof(pi[id]));
+    }
     mi = map->getMapInfo();
-    record_file.write((char*)&pi0, sizeof(pi0));
-    record_file.write((char*)&pi1, sizeof(pi1));
     record_file.write((char*)&mi, sizeof(mi));
     record_file.flush();
 

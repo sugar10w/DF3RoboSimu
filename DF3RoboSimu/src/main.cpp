@@ -47,7 +47,7 @@ int main(int argc, char** argv)
             //system("pause");
         }
 
-        /*cout << "t=" << game.getTime() << endl;
+        /*cout << endl << "t=" << game.getTime() << endl;
         cout << "x=" << game.getCar(P0)->getCoor().x << "\t\ty=" << game.getCar(P0)->getCoor().y << "\t\ta=" << game.getCar(P0)->getCarAngle() << endl;
         cout << "x=" << game.getCar(P1)->getCoor().x << "\t\ty=" << game.getCar(P1)->getCoor().y << "\t\ta=" << game.getCar(P1)->getCarAngle() << endl;
         */
