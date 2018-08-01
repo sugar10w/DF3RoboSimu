@@ -7,6 +7,38 @@
 using namespace std;
 
 
+char* getTimeStamp(char* s) {
+    SYSTEMTIME st;
+    GetLocalTime(&st);
+    sprintf_s(s, 256,
+        "%4d%02d%02d-%02d%02d%02d-%03d",
+        st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+    return s;
+}
+
+char* getFileName(char* s, char* full_path) {
+    _splitpath(full_path, NULL, NULL, s, NULL);
+    return s;
+}
+
+char* getRecordFileName(char* s, char* p0, char* p1) {
+
+    char s_time[256];
+    char s_p0[256], s_p1[256];
+
+    getTimeStamp(s_time);
+    getFileName(s_p0, p0);
+    getFileName(s_p1, p1);
+
+    sprintf_s(s, 1024,
+        "record.[%s].[%s].[%s].log",
+        s_time, s_p0, s_p1);
+
+    return s;
+
+}
+
+
 int main(int argc, char** argv) 
 {
     
@@ -18,8 +50,10 @@ int main(int argc, char** argv)
     PLAYER_ID tempid;
 
     // load Game
-    char* recordFile = "record.log";
+    char recordFile[1024];
     char* mapFile = "../data/map.txt";
+    getRecordFileName(recordFile, argv[1], argv[2]);
+
     Game game(recordFile, mapFile);
 
     if (!game.isValid()) {
@@ -41,7 +75,7 @@ int main(int argc, char** argv)
 
     while (true)
     {
-        if (game.getTime() % 100 == 0) 
+        if (game.getTime() % 600 == 0) 
         {
             cout << "simulation time: " << game.getTime() << endl;
             //system("pause");

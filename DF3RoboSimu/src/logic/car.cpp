@@ -78,7 +78,7 @@ TAngle Car::rotateAttack(TAngle _target_attack_angle)
 
 bool Car::changeMag()
 {
-    if (changemag_cd_status == BUFF_NORM)
+    if (changemag_cd_status == BUFF_NORM && mag < MAG_MAX)
     {
         mag = 0;
         changemag_cd_status = BUFF_CD;
